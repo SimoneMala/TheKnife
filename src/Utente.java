@@ -22,19 +22,19 @@ public class Utente {
 
     //metodi getter
     public String getNome() {
-        return this.nome;
+        return nome;
     }
     public String getCognome() {
-        return this.cognome;
+        return cognome;
     }
     public String getPassword() {
-        return this.password;
+        return password;
     }
     public String getDomicilio() {
-        return this.domicilio;
+        return domicilio;
     }
     public Ruolo getRuolo() {
-        return this.ruolo;
+        return ruolo;
     }
 
     //metodi setter
