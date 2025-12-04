@@ -1,23 +1,29 @@
 public class Recensione {
 
     //campi
+    private String nomeRistorante;
     private String testo;
     private int stelle;
     private String rispostaRecensione;
 
     //costruttore
-    public Recensione(String testo, int stelle, String rispostaRecensione){
+    public Recensione(String nomeRistorante, String testo, int stelle, String rispostaRecensione){
+        this.nomeRistorante=nomeRistorante;
         this.testo=testo;
         this.stelle=stelle;
         this.rispostaRecensione=rispostaRecensione;
     }
 
     //metodi getter e setter
+    public String getNomeRistorante(){ return nomeRistorante; }
+
+    public setNomeRistorante(String nomeRistorante) { return this.nomeRistorante=nomeRistorante; }
+
     public String getTesto() {
         return testo;
     }
 
-    public String setTesto(String testo){
+    public setTesto(String testo){
         return this.testo=testo;
     }
 
@@ -25,15 +31,23 @@ public class Recensione {
         return stelle;
     }
 
-    public int setStelle(int stelle){
+    public setStelle(int stelle){
         return this.stelle=stelle;
     }
 
     public String getRispostaRecensione(){
         return rispostaRecensione;
     }
-    public String setRispostaRecensione(String rispostaRecensione){
+    public setRispostaRecensione(String rispostaRecensione){
         return this.rispostaRecensione=rispostaRecensione;
+    }
+
+    @Override
+    public String toString(){
+        return "Ristorante:" + nomeRistorante +
+                "\nTesto recensione:" + testo +
+                "\nValutazione in stelle:" + stelle +
+                "\nRisposta alla recensione:" + rispostaRecensione;
     }
 
 }
