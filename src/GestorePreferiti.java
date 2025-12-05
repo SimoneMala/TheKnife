@@ -1,3 +1,5 @@
+import Eccezioni.ListaVuotaException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,12 @@ public class GestorePreferiti {
     }
 
     //metodo per eliminare un ristorante dalla mia lista
-    public void cancellaPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException{
+    public void cancellaPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException, ListaVuotaException{
         if (utente==null || ristorante==null){
             throw new NullPointerException("Utente o ristorante non corretti");
         }
-        if (this.ristorantiPreferiti.size()==0){
-            throw new NullPointerException("La lista preferiti è già vuota");
+        if (this.ristorantiPreferiti.isEmpty()){
+            throw new ListaVuotaException("La lista preferiti è già vuota");
         }
         Preferito p= new Preferito(utente.getUsername(), ristorante.getNome());
         for(Preferito p1: this.ristorantiPreferiti){
@@ -44,5 +46,21 @@ public class GestorePreferiti {
         }
     }
 
-    //per visualizzare la lista nel main la stampo
+    //restituisce la lista di preferiti per l'utente, per visualizzare la lista nel main la stampo
+    public List visualizzaPreferiti(Utente utente) throws ListaVuotaException{
+        if (this.ristorantiPreferiti.isEmpty()){
+            throw new ListaVuotaException("Non sono presenti preferiti");
+        }
+        String nomeUtente= utente.getUsername();
+        List<Preferito> tmp= new ArrayList<Preferito>();
+        for(Preferito p: this.ristorantiPreferiti){
+            if(p.getUsername().equals(nomeUtente)){
+                tmp.add(p);
+            }
+        }
+        if(tmp.isEmpty()){
+            throw new ListaVuotaException("Non sono presenti preferiti per utente: " +  nomeUtente);
+        }
+        return tmp;
+    }
 }
