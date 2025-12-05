@@ -15,6 +15,7 @@ public class Recensione {
     }
 
     //metodi getter e setter
+    //metodi setter devono restituire void, non c'è return, vedi setRispostaRecensione
     public String getNomeRistorante(){ return nomeRistorante; }
 
     public setNomeRistorante(String nomeRistorante) { return this.nomeRistorante=nomeRistorante; }
@@ -38,8 +39,8 @@ public class Recensione {
     public String getRispostaRecensione(){
         return rispostaRecensione;
     }
-    public setRispostaRecensione(String rispostaRecensione){
-        return this.rispostaRecensione=rispostaRecensione;
+    public void setRispostaRecensione(String rispostaRecensione){
+         this.rispostaRecensione=rispostaRecensione;
     }
 
     @Override
