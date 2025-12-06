@@ -8,6 +8,9 @@ public class Recensione {
 
     //costruttore
     public Recensione(String nomeRistorante, String testo, int stelle, String rispostaRecensione){
+        if (testo==null || testo.length()>250 || stelle<1 || stelle>5){
+            throw new IllegalArgumentException("Dati recensione non validi");
+        }
         this.nomeRistorante=nomeRistorante;
         this.testo=testo;
         this.stelle=stelle;
