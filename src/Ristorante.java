@@ -10,6 +10,7 @@ public class Ristorante {
     private boolean delivery;
     private boolean prenotazione;
     private String tipoCucina;
+    private double stelle;
 
     //costruttore
     public Ristorante(String nome, String nazione, String citta, String indirizzo, double latitudine,
@@ -24,6 +25,7 @@ public class Ristorante {
         this.delivery = delivery;
         this.prenotazione = prenotazione;
         this.tipoCucina = tipoCucina;
+        this.stelle = stelle;
     }
 
 
@@ -38,6 +40,7 @@ public class Ristorante {
     public boolean getDelivery(){return delivery;}
     public boolean getPrenotazione(){return prenotazione;}
     public String getTipoCucina(){return tipoCucina;}
+    public double getStelle(){return stelle;}
 
     //setter
     public void setNome(String nome){this.nome = nome;}
@@ -50,5 +53,7 @@ public class Ristorante {
     public void setDelivery(boolean delivery) {this.delivery = delivery;}
     public void setPrenotazione(boolean prenotazione) {this.prenotazione = prenotazione;}
     public void setTipoCucina(String tipoCucina){this.tipoCucina = tipoCucina;}
+    public void setStelle(double stelle){this.stelle = stelle;}
+
 
 }
