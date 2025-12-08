@@ -1,16 +1,35 @@
 import Eccezioni.ListaVuotaException;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.util.*;
 import java.util.List;
 
 public class GestorePreferiti {
 
     //campi
     private List<Preferito> ristorantiPreferiti;
+    private String percorsoFileMemorizzato;
 
     //costruttore a cui poi aggiungere il metodo carica() che carica dal file json i ristoranti nella lista
-    public GestorePreferiti(){
-        ristorantiPreferiti = new ArrayList<Preferito>();
+    public GestorePreferiti(String nomeFile){
+        try{
+            //leggo contenuto del file
+            String contenutoJson= Files.readString(Path.of(nomeFile));
+            Gson gson = new Gson();
+            //metto contenuto del file nella lista
+            this.ristorantiPreferiti= gson.fromJson(contenutoJson, new TypeToken<ArrayList<Preferito>>(){}.getType());
+        } catch (Exception e) {
+            System.err.println("Impossibile caricare i dati dal file Preferiti");
+        }
+
+        //se la lista rimane vuota perchè file non viene trovato o è vuoto la creo vuota
+        if(this.ristorantiPreferiti==null) {
+            ristorantiPreferiti = new ArrayList<Preferito>();
+        }
     }
 
     //metodo get
@@ -28,6 +47,7 @@ public class GestorePreferiti {
 
         this.ristorantiPreferiti.add(p);
 
+        ModificaFileJsonPreferiti(this.ristorantiPreferiti);
     }
 
     //metodo per eliminare un ristorante dalla mia lista
@@ -44,6 +64,7 @@ public class GestorePreferiti {
                 this.ristorantiPreferiti.remove(p);
             }
         }
+        ModificaFileJsonPreferiti(this.ristorantiPreferiti);
     }
 
     //restituisce la lista di preferiti per l'utente, per visualizzare la lista nel main la stampo
@@ -62,5 +83,16 @@ public class GestorePreferiti {
             throw new ListaVuotaException("Non sono presenti preferiti per utente: " +  nomeUtente);
         }
         return tmp;
+    }
+
+    public void ModificaFileJsonPreferiti(List modifica){
+        this.ristorantiPreferiti=modifica;
+        try{
+            Gson gson = new Gson();
+            String contenutoArray= gson.toJson(modifica);
+            Files.writeString(Path.of(percorsoFileMemorizzato), contenutoArray);
+        }catch(Exception e){
+            System.err.println("Impossibile modificare il file Preferiti");
+        }
     }
 }

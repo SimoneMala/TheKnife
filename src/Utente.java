@@ -7,14 +7,16 @@ public class Utente {
     //campi
     private String nome;
     private String cognome;
+    private String username;
     private String password;
     private String domicilio;
     private Ruolo ruolo;
 
     //costruttore
-    public Utente(String nome, String cognome, String password, String domicilio, Ruolo ruolo) {
+    public Utente(String nome, String cognome, String username, String password, String domicilio, Ruolo ruolo) {
         this.nome = nome;
         this.cognome = cognome;
+        this.username = username;
         this.password = password;
         this.domicilio = domicilio;
         this.ruolo = ruolo;
@@ -26,6 +28,9 @@ public class Utente {
     }
     public String getCognome() {
         return cognome;
+    }
+    public String getUsername() {
+        return username;
     }
     public String getPassword() {
         return password;
@@ -44,6 +49,9 @@ public class Utente {
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public void setPassword(String password) {
         this.password = password;
     }
@@ -54,5 +62,8 @@ public class Utente {
         this.ruolo = ruolo;
     }
 
+    public String toString() {
+        return "Utente: "+ username + " " + password;
+    }
 
 }
