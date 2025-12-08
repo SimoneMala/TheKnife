@@ -62,11 +62,11 @@ public class GestoreRistorante {
     public void aggiungiRistorante(Ristorante ristorante){
         this.elencoRistoranti.add(ristorante); //aggiorno la lista in memroia
         //aggiorno il file json
-        modificaFileJson(elencoRistoranti);
+        modificaFileJsonRistoranti(elencoRistoranti);
     }
 
     //Modifica diretta del FileJson
-    public void modificaFileJson(List<Ristorante> modifica) {
+    public void modificaFileJsonRistoranti(List<Ristorante> modifica) {
         this.elencoRistoranti = modifica;
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
