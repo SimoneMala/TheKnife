@@ -1,3 +1,5 @@
+package theknife;
+
 public class Recensione {
 
     //campi
@@ -48,7 +50,7 @@ public class Recensione {
 
     @Override
     public String toString(){
-        return "Ristorante:" + nomeRistorante +
+        return "theknife.Ristorante:" + nomeRistorante +
                 "\nTesto recensione:" + testo +
                 "\nValutazione in stelle:" + stelle +
                 "\nRisposta alla recensione:" + rispostaRecensione;

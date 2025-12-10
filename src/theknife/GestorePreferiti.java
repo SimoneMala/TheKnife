@@ -1,9 +1,9 @@
-import Eccezioni.ListaVuotaException;
-import com.google.gson.Gson;
+package theknife;
 
+import theknife.eccezioni.ListaVuotaException;
+import com.google.gson.Gson;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.*;
 import java.util.List;
@@ -41,7 +41,7 @@ public class GestorePreferiti {
     //nel main controllo che utente e ristorante esistono
     public void aggiungiPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException{
         if (utente==null || ristorante==null){
-            throw new NullPointerException("Utente o ristorante non corretti");
+            throw new NullPointerException("theknife.Utente o ristorante non corretti");
         }
         Preferito p= new Preferito(utente.getUsername(), ristorante.getNome());
 
@@ -53,7 +53,7 @@ public class GestorePreferiti {
     //metodo per eliminare un ristorante dalla mia lista
     public void cancellaPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException, ListaVuotaException{
         if (utente==null || ristorante==null){
-            throw new NullPointerException("Utente o ristorante non corretti");
+            throw new NullPointerException("theknife.Utente o ristorante non corretti");
         }
         if (this.ristorantiPreferiti.isEmpty()){
             throw new ListaVuotaException("La lista preferiti è già vuota");

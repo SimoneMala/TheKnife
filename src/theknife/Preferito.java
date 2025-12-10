@@ -1,3 +1,5 @@
+package theknife;
+
 public class Preferito {
     //campi
     private String username;

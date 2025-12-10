@@ -1,3 +1,5 @@
+package theknife;
+
 public class Ristorante {
     //campi
     private String nome;

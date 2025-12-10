@@ -1,3 +1,5 @@
+package theknife;
+
 import java.util.*;
 
 public class GestoreRecensione {
@@ -8,7 +10,7 @@ public class GestoreRecensione {
         recensioni = new ArrayList<>();
     }
 
-    //mostra recensioni del Ristorante
+    //mostra recensioni del theknife.Ristorante
     public void visualizzaRecensioni(Ristorante ris) {
         boolean trovato = false;
         for (Recensione rec : recensioni) {

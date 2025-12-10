@@ -1,4 +1,6 @@
-import Eccezioni.*;
+package theknife;
+
+import theknife.eccezioni.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.nio.file.Files;
@@ -54,7 +56,7 @@ public class GestoreUtenti {
     public void registrazioneUtente(Utente utente) throws NullPointerException {
         //controllo che utente non sia vuoto
         if (utente == null) {
-            throw new NullPointerException("Utente non vaido");
+            throw new NullPointerException("theknife.Utente non vaido");
         }
         //aggiungo l'utenten alla lista
         this.listaUtenti.add(utente);

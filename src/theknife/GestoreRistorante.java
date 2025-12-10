@@ -1,4 +1,6 @@
-import Eccezioni.ListaVuotaException;
+package theknife;
+
+import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -19,7 +21,7 @@ public class GestoreRistorante {
             //leggo contenuto del file in una stringa
             String contenutoJson = Files.readString(Path.of(nomeFileJson));
             Gson gson = new Gson();
-            //prendo la stringa e la converto in array di Ristorante
+            //prendo la stringa e la converto in array di theknife.Ristorante
             this.elencoRistoranti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Ristorante>>(){}.getType());
         } catch (Exception e){
             e.printStackTrace();}
@@ -55,7 +57,7 @@ public class GestoreRistorante {
         for(Ristorante r: elencoRistoranti){
             if(r.getNome().equals(nome) && r.getCitta().equals(citta)){return r;}
         }
-        throw new ListaVuotaException("Ristorante non trovato");
+        throw new ListaVuotaException("theknife.Ristorante non trovato");
     }
 
     //Aggiungi ristorante al file json

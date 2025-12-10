@@ -1,3 +1,5 @@
+package theknife;
+
 public class Utente {
 
     public enum Ruolo{
@@ -63,7 +65,7 @@ public class Utente {
     }
 
     public String toString() {
-        return "Utente: "+ username + " " + password;
+        return "theknife.Utente: "+ username + " " + password;
     }
 
 }
