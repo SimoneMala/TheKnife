@@ -23,22 +23,22 @@ public class Recensione {
     //metodi setter devono restituire void, non c'è return, vedi setRispostaRecensione
     public String getNomeRistorante(){ return nomeRistorante; }
 
-    public setNomeRistorante(String nomeRistorante) { return this.nomeRistorante=nomeRistorante; }
+    public void setNomeRistorante(String nomeRistorante) { this.nomeRistorante=nomeRistorante; }
 
     public String getTesto() {
         return testo;
     }
 
-    public setTesto(String testo){
-        return this.testo=testo;
+    public void setTesto(String testo){
+        this.testo=testo;
     }
 
     public int getStelle(){
         return stelle;
     }
 
-    public setStelle(int stelle){
-        return this.stelle=stelle;
+    public void setStelle(int stelle){
+        this.stelle=stelle;
     }
 
     public String getRispostaRecensione(){

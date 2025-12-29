@@ -11,30 +11,35 @@ public class GestoreRecensione {
     }
 
     //mostra recensioni del theknife.Ristorante
-    public void visualizzaRecensioni(Ristorante ris) {
+    public String visualizzaRecensioni(Ristorante ris) {
         boolean trovato = false;
+        if (recensioni.isEmpty()) {
+            throw new IllegalArgumentException("la lista è vuota");
+        }
+        String recensioneRis = "";
         for (Recensione rec : recensioni) {
             if (rec.getNomeRistorante().equals(ris.getNome())) {
                 trovato = true;
-                System.out.println("Testo:" + rec.getTesto());
-                System.out.println("Stelle:" + rec.getStelle());
-                String risposta = rec.getRispostaRecensione();
+
                 if (risposta == null) {
-                    System.out.println("Risposta: nessuna risposta alla recensione.");
+                    throw new IllegalArgumentException("non ci sono risposte");
+                    recensioneRis = "Nome Ristorante:" + getNomeRistorante() + "\nStelle:" + getStelle() + "\nTesto" + getTesto();
                 } else {
-                    System.out.println("Risposta:" + risposta);
+                    recensioneRis = "Nome Ristorante:" + getNomeRistorante() + "\nStelle:" + getStelle() + "\nTesto" + getTesto()
+                            + "\nRisposta:" + getRispostaRecensione();
                 }
             }
         }
         if (!trovato) {
-            System.out.println("Nessuna recensione presente per questo ristorante.");
+            throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         }
+        return recensioneRis;
     }
 
     //inserisce risposta alla recensione
     public void rispondiRecensione(Recensione rec, String risposta) {
         if (rec.getRispostaRecensione() != null) {
-            System.out.println("Risposta già presente.");
+            throw new IllegalArgumentException("Risposta già inserita.");
         } else {
             rec.setRispostaRecensione(risposta);
         }
@@ -50,17 +55,20 @@ public class GestoreRecensione {
     public void modificaRecensione(Recensione rec, String testoMod, int stelleMod) {
         for (Recensione tmp : recensioni) {
             if (tmp.equals(rec)) {
-                rec = tmp;
+                tmp.setTesto(testoMod);
+                tmp.setStelle(stelleMod);
                 break;
+            } else {
+                throw new IllegalArgumentException("Recensione non trovata");
             }
         }
-        rec.setTesto(testoMod);
-        rec.setStelle(stelleMod);
     }
 
     //elimina recensione
     public void eliminaRecensione(Recensione rec) {
-        recensioni.remove(rec);
+        if (!recensioni.remove(rec)) {
+            throw new IllegalArgumentException("Recensione non trovata");
+        }
     }
 
     //riepilogo recensioni ristorante
