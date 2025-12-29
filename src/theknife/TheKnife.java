@@ -1,5 +1,7 @@
 package theknife;
 
+import theknife.eccezioni.UtenteInesistente;
+
 import java.util.*;
 public class TheKnife {
 
@@ -32,22 +34,84 @@ public class TheKnife {
     }
 
     public static void paginaHome(){
-        //stampe di benvenuto
+        System.out.println("Benvenuto in TheKnife!");
+        //scelta dell'operazione
+        while(true){
+            System.out.println("\n1: Login \n2: Registrazione \n3: Accedi come guest \n4: Esci da TheKnife" );
+            System.out.println("Digitare il numero dell'operazione scelta:");
+            //controlli sull'inserimento di un intero
+            while (!scanner.hasNextInt()) {
+                System.out.println("Input non valido, inserire un valore intero:");
+                scanner.next();
+            }
+            int op= scanner.nextInt();
 
-        //parte il ciclo:
-        //stampe di scelta dell'operazione: login, registrazione, entrare come guest, chiudere l'applicazione
+            switch (op){
+                //scelta login
+                case 1:
+                   // paginaLogin();
+                    break;
+                //scelta registrazione
+                case 2:
+                    //paginaRegistrazione();
+                    break;
+                //scelta accesso come guest
+                case 3:
+                    System.out.println("Inserire un luogo vicino a lei:");
 
-        //posso creare 2 pagine a parte che gestiscono login e registrazione così le riutilizzo anche per guest
-        /*switch case, in base alla scelta:
-        -login= chiede username e password, fa i controlli che noon esista username, fa hash della password,
-        poi entra nella pagina di Cliente o Ristoratore in base a quale ruolo ha (chiamata a quel metodo)
-        -registrazione= chiede tutti i valori necessari, fa i controlli, hash password, poi entra nella pagina di
-        Cliente o Ristoratore in base a quale ruolo ha
-        -guest= chiede di inserire una string del luogo, poi chiama pagina del guest
-        -chiusura= return
-        */
+                    //controlli sull'inserimento del luogo
+                    while (!scanner.hasNextLine()) {
+                        System.out.println("Input non valido, inserire un luogo:");
+                        scanner.next();
+                    }
+                    String luogo= scanner.nextLine();
+
+                    paginaGuest(luogo);
+                    break;
+                //scelta di uscire dall'app
+                case 4:
+                    return;
+                default:
+                    System.out.println("Input non valido, inserire un valore che fornisce le operazioni mostrate:");
+            }
+        }
     }
 
+    public static void paginaLogin() {
+        System.out.println("/nLogin");
+        System.out.println("Inserire lo username:");
+        String username = scanner.nextLine();
+        System.out.println("Inserire la password:");
+        String password = scanner.nextLine();
+
+        //hash della passowrd
+        //...
+
+        String hashPw = "";
+        Utente utente= null;
+        try {
+            utente = gestoreUtenti.login(username, hashPw);
+        } catch (NullPointerException e){
+            System.err.println(e.getMessage());
+            return;
+        } catch (UtenteInesistente e) {
+            System.err.println(e.getMessage());
+            return;
+        }
+
+        System.out.println("Login eseguito con successo! \nBenvenuto:" + utente);
+
+        //controllo del ruolo per mandarlo alla pagina giusta
+        if (utente.getRuolo().equals(Utente.Ruolo.CLIENTE)){
+            //paginaCliente(utente)
+        }else{
+            //paginaRistoratore(utente)
+        }
+    }
+
+    public static void paginaRegistrazione() {
+
+    }
     public static void paginaGuest(String luogo){
         //stampe per pagina guest
 
