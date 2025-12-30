@@ -1,37 +1,81 @@
 package theknife;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
+
 public class GestoreRecensione {
-
+    //campi
+    //lista che contiene i dati del JSON sulle recensioni
     private List<Recensione> recensioni;
+    private String percorsoFileMemorizzato;
 
-    public GestoreRecensione() {
-        recensioni = new ArrayList<>();
+    //nel costruttore includiamo il metodo che carica le recensioni dal file JSON
+    public GestoreRecensione(String nomeFileJson) {
+
+        try {
+            //leggo contenuto del file e lo inserisco tutto in una string
+            String contenutoJson = Files.readString(Path.of(nomeFileJson));
+            Gson gson = new Gson();
+
+            //inserisco il contenuto nella mia lista
+            this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
+            }.getType());
+
+        } catch (Exception e) {
+            System.err.println("Impossibile caricare le recensioni");
+        }
+
+        if (this.recensioni == null) {
+            recensioni = new ArrayList<>();
+        }
     }
+
+    //metodo get
+    public List<Recensione> getRecensioni() {
+        return recensioni;
+    }
+
+    //metodi JSON
+    private void salvaSuFile() {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(recensioni);
+            Files.writeString(Path.of(percorsoFileMemorizzato), json);
+        } catch (Exception e) {
+            System.err.println("Errore nel salvataggio recensioni");
+        }
+    }
+
 
     //mostra recensioni del theknife.Ristorante
     public String visualizzaRecensioni(Ristorante ris) {
-        boolean trovato = false;
+
         if (recensioni.isEmpty()) {
             throw new IllegalArgumentException("la lista è vuota");
         }
         String recensioneRis = "";
+        boolean trovato = false;
+
         for (Recensione rec : recensioni) {
             if (rec.getNomeRistorante().equals(ris.getNome())) {
                 trovato = true;
 
-                if (risposta == null) {
-                    throw new IllegalArgumentException("non ci sono risposte");
-                    recensioneRis = "Nome Ristorante:" + getNomeRistorante() + "\nStelle:" + getStelle() + "\nTesto" + getTesto();
-                } else {
-                    recensioneRis = "Nome Ristorante:" + getNomeRistorante() + "\nStelle:" + getStelle() + "\nTesto" + getTesto()
-                            + "\nRisposta:" + getRispostaRecensione();
+                recensioneRis += "Nome Ristorante: " + rec.getNomeRistorante()
+                        + "\nStelle: " + rec.getStelle()
+                        + "\nTesto: " + rec.getTesto();
+
+                if (rec.getRispostaRecensione() != null) {
+                    recensioneRis += "\nRisposta: " + rec.getRispostaRecensione();
                 }
             }
         }
-        if (!trovato) {
-            throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
+
+            if (!trovato) {
+                throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         }
         return recensioneRis;
     }
@@ -42,6 +86,7 @@ public class GestoreRecensione {
             throw new IllegalArgumentException("Risposta già inserita.");
         } else {
             rec.setRispostaRecensione(risposta);
+            salvaSuFile();
         }
     }
 
@@ -49,6 +94,7 @@ public class GestoreRecensione {
     public void inserisciRecensione(Ristorante ris, String testo, int stelle) {
         Recensione nuova = new Recensione(ris.getNome(), testo, stelle, null);
         recensioni.add(nuova);
+        salvaSuFile();
     }
 
     //modifica recensione esistente
@@ -57,11 +103,11 @@ public class GestoreRecensione {
             if (tmp.equals(rec)) {
                 tmp.setTesto(testoMod);
                 tmp.setStelle(stelleMod);
-                break;
-            } else {
-                throw new IllegalArgumentException("Recensione non trovata");
+                salvaSuFile();
+                return;
             }
         }
+        throw new IllegalArgumentException("Recensione non trovata");
     }
 
     //elimina recensione
@@ -69,6 +115,7 @@ public class GestoreRecensione {
         if (!recensioni.remove(rec)) {
             throw new IllegalArgumentException("Recensione non trovata");
         }
+        salvaSuFile();
     }
 
     //riepilogo recensioni ristorante
