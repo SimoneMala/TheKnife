@@ -56,7 +56,7 @@ public class GestoreUtenti {
     public void registrazioneUtente(Utente utente) throws NullPointerException {
         //controllo che utente non sia vuoto
         if (utente == null) {
-            throw new NullPointerException("theknife.Utente non vaido");
+            throw new NullPointerException("Utente non valido");
         }
         //aggiungo l'utenten alla lista
         this.listaUtenti.add(utente);

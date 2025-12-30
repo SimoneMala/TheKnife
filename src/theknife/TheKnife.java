@@ -21,7 +21,7 @@ public class TheKnife {
         gestoreUtenti= new GestoreUtenti("Utenti.json");
         gestorePreferiti= new GestorePreferiti("Preferiti.json");
         gestoreRistorante= new GestoreRistorante("Ristoranti.json");
-        gestoreRecensione= new GestoreRecensione("Recensioni.json")
+        gestoreRecensione= new GestoreRecensione("Recensioni.json");
 
         //chiamo la pagina home, inizio dell'applicazione
         paginaHome();
@@ -37,34 +37,26 @@ public class TheKnife {
         System.out.println("Benvenuto in TheKnife!");
         //scelta dell'operazione
         while(true){
-            System.out.println("\n1: Login \n2: Registrazione \n3: Accedi come guest \n4: Esci da TheKnife" );
+            System.out.println("1: Login \n2: Registrazione \n3: Accedi come guest \n4: Esci da TheKnife" );
             System.out.println("Digitare il numero dell'operazione scelta:");
             //controlli sull'inserimento di un intero
-            while (!scanner.hasNextInt()) {
-                System.out.println("Input non valido, inserire un valore intero:");
-                scanner.next();
-            }
-            int op= scanner.nextInt();
+            int op= IntInput();
 
             switch (op){
                 //scelta login
                 case 1:
-                   // paginaLogin();
+                    paginaLogin();
                     break;
                 //scelta registrazione
                 case 2:
-                    //paginaRegistrazione();
+                    paginaRegistrazione();
                     break;
                 //scelta accesso come guest
                 case 3:
                     System.out.println("Inserire un luogo vicino a lei:");
 
                     //controlli sull'inserimento del luogo
-                    while (!scanner.hasNextLine()) {
-                        System.out.println("Input non valido, inserire un luogo:");
-                        scanner.next();
-                    }
-                    String luogo= scanner.nextLine();
+                    String luogo= StringInput();
 
                     paginaGuest(luogo);
                     break;
@@ -89,18 +81,22 @@ public class TheKnife {
 
         String hashPw = "";
         Utente utente= null;
+        boolean successo= true;
         try {
             utente = gestoreUtenti.login(username, hashPw);
         } catch (NullPointerException e){
             System.err.println(e.getMessage());
-            return;
+            successo= false;
         } catch (UtenteInesistente e) {
             System.err.println(e.getMessage());
+            successo= false;
+        }
+        if(successo){
+            System.out.println("Login eseguito con successo! \nBenvenuto:" + utente);
+        }else{
+            System.out.println("Il login non è andato a buon fine, siamo spiacenti");
             return;
         }
-
-        System.out.println("Login eseguito con successo! \nBenvenuto:" + utente);
-
         //controllo del ruolo per mandarlo alla pagina giusta
         if (utente.getRuolo().equals(Utente.Ruolo.CLIENTE)){
             //paginaCliente(utente)
@@ -109,13 +105,80 @@ public class TheKnife {
         }
     }
 
+    //richiesta di informazioni per creare l'utente da registrare
     public static void paginaRegistrazione() {
-
+        Utente u= null;
+        System.out.println("\nRegistrazione");
+        System.out.println("Inserire le informazioni necessarie alla registrazione:");
+        System.out.println("Nome:");
+        scanner.nextLine();
+        String nome= StringInput();
+        System.out.println("Cognome:");
+        String cognome= StringInput();
+        System.out.println("Username:");
+        //controllo che non esistano altri username uguali
+        boolean corretto= true;
+        ArrayList<Utente> utenti = (ArrayList<Utente>) gestoreUtenti.getListaUtenti();
+        String username= "";
+        do {
+            username = StringInput();
+            for (Utente tmp : utenti) {
+                if (tmp.getUsername().equals(username)) {
+                    System.out.println("Questo username è già in utilizzo, sceglierne uno diverso:");
+                    corretto= false;
+                    break;
+                }
+                corretto= true;
+            }
+        }while(!corretto);
+        System.out.println("Password:");
+        String password= StringInput();
+        //hash della password, sarà quella inserita all'interno dell'utente
+        //...
+        String hashPw = "";
+        System.out.println("Domicilio:");
+        String domicilio= StringInput();
+        System.out.println("Ruolo: selezionare 1 per Ristoratore, 2 per Cliente");
+        boolean ruoloCorretto= true;
+        do {
+            int ruolo = IntInput();
+            //assegno il ruolo scelto
+            if(ruolo==1){
+                u= new Utente(nome, cognome, username, hashPw, domicilio, Utente.Ruolo.RISTORATORE);
+                ruoloCorretto= true;
+            }else if (ruolo==2){
+                u= new Utente(nome, cognome, username, hashPw, domicilio, Utente.Ruolo.CLIENTE);
+                ruoloCorretto= true;
+            }else{ //se numero non identifica ruolo, lo richiedo
+                System.out.println("L'input inserito non si riferisce a nessun ruolo, inserire un intero tra quelli mostrati " +
+                        "\n(1=ristoratore, 2= cliente):");
+                ruoloCorretto= false;
+            }
+        }while(!ruoloCorretto);
+        //registro l'utente
+        boolean successo= true;
+        try {
+            gestoreUtenti.registrazioneUtente(u);
+        }catch (NullPointerException e){
+            System.err.println(e.getMessage());
+            successo= false;
+        }
+        //pagina login automatica dopo la registrazione
+        if(successo) {
+            System.out.println("Registrazione effettuata con successo! \nVerrai reindirizzato alla pagina di login");
+            paginaLogin();
+        }else{
+            System.out.println("La registrazione non è andata a buon fine, siamo spiacenti!");
+        }
     }
+
     public static void paginaGuest(String luogo){
         //stampe per pagina guest
-
-        //parte il ciclo
+        System.out.println("Benvenuto nell'area Guest!");
+        //scelta dell'operazione
+        while (true){
+            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini");
+        }
         //stampe per la scelta: login, registrazione, visualizza ristoranti vicini, ricerca
         /*switch case in base alla scelta:
         -login= chiama paginaLogin
@@ -124,6 +187,29 @@ public class TheKnife {
         -ricerca= chiama paginaFiltriRicerca, chiede al cliente che filtri vuole mettere
          */
 
+    }
+
+    //metodi di controllo dell'input
+    //controllo che sia una stringa
+    public static String StringInput(){
+        while (!scanner.hasNextLine()) {
+            System.out.println("Input non valido, inserire una stringa!");
+            scanner.nextLine();
+        }
+        String input = scanner.nextLine();
+
+        return input;
+    }
+
+    //controllo che sia un intero
+    public static int IntInput(){
+        while(!scanner.hasNextInt()) {
+            System.out.println("Input non valido, inserire un intero!");
+            scanner.nextInt();
+        }
+        int input = scanner.nextInt();
+
+        return input;
     }
 
 }

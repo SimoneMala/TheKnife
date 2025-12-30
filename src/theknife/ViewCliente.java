@@ -15,6 +15,7 @@ public class ViewCliente {
         return input;
     }
 
+
     private static void NavigazioneRistoranti(Cliente u, Scanner s, List<Ristorante> listaRistoranti){
         if (listaRistoranti == null || listaRistoranti.isEmpty()) {
             System.out.println("Nessun ristorante trovato");
