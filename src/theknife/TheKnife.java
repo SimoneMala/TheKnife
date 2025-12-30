@@ -21,7 +21,7 @@ public class TheKnife {
         gestoreUtenti= new GestoreUtenti("Utenti.json");
         gestorePreferiti= new GestorePreferiti("Preferiti.json");
         gestoreRistorante= new GestoreRistorante("Ristoranti.json");
-        //gestoreRecensione= new GestoreRecensione("Recensioni.json"); -> commento perchè finchè greta non aggiorna il gestore è errato
+        gestoreRecensione= new GestoreRecensione("Recensioni.json")
 
         //chiamo la pagina home, inizio dell'applicazione
         paginaHome();
