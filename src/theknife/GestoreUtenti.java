@@ -1,5 +1,6 @@
 package theknife;
 
+import org.mindrot.jbcrypt.BCrypt;
 import theknife.eccezioni.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,8 +44,11 @@ public class GestoreUtenti {
         }
 
         for (Utente u : listaUtenti) {
-            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
-                return u;
+            if (u.getUsername().equals(username)) {
+                String hashPw= u.getPassword();
+                if (BCrypt.checkpw(password, hashPw)) {
+                 return u;
+                }
             }
         }
 

@@ -65,7 +65,7 @@ public class Utente {
     }
 
     public String toString() {
-        return "theknife.Utente: "+ username + " " + password;
+        return "Utente: "+ username + " " + password;
     }
 
 }

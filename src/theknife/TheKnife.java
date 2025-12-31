@@ -1,7 +1,9 @@
 package theknife;
 
+import theknife.eccezioni.ListaVuotaException;
 import theknife.eccezioni.UtenteInesistente;
-
+//libreria per hashing
+import org.mindrot.jbcrypt.BCrypt;
 import java.util.*;
 public class TheKnife {
 
@@ -75,15 +77,10 @@ public class TheKnife {
         String username = scanner.nextLine();
         System.out.println("Inserire la password:");
         String password = scanner.nextLine();
-
-        //hash della passowrd
-        //...
-
-        String hashPw = "";
         Utente utente= null;
         boolean successo= true;
         try {
-            utente = gestoreUtenti.login(username, hashPw);
+            utente = gestoreUtenti.login(username, password);
         } catch (NullPointerException e){
             System.err.println(e.getMessage());
             successo= false;
@@ -134,8 +131,7 @@ public class TheKnife {
         System.out.println("Password:");
         String password= StringInput();
         //hash della password, sarà quella inserita all'interno dell'utente
-        //...
-        String hashPw = "";
+        String hashPw = BCrypt.hashpw(password, BCrypt.gensalt());
         System.out.println("Domicilio:");
         String domicilio= StringInput();
         System.out.println("Ruolo: selezionare 1 per Ristoratore, 2 per Cliente");
@@ -177,18 +173,152 @@ public class TheKnife {
         System.out.println("Benvenuto nell'area Guest!");
         //scelta dell'operazione
         while (true){
-            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini");
+            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti");
+            int op= scanner.nextInt();
+
+            switch (op){
+                case 1:
+                    paginaLogin();
+                    break;
+                case 2:
+                    paginaRegistrazione();
+                    break;
+                case 3:
+                    try {
+                        ArrayList<Ristorante> ristorantiVicini = (ArrayList<Ristorante>) gestoreRistorante.cercaRistoranti
+                                (null, luogo, null, null, false, false, null);
+                        if(!ristorantiVicini.isEmpty()){
+                            System.out.println("Ecco i ristoranti che si trovano vicino a te:");
+                            int numero= 1;
+                            //creo matrice che contiene tutti i ristoranti (nome =0, città= 1) che verrà passata al metodo
+                            List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiVicini);
+                            Ristorante visto=dettagliRistorante(ristorantiTrovati);
+                            if(visto!=null){
+                                //utilizzo metodo visualizza recensioni per vedere recensioni in anonimo
+                                //(all'interno del metodo serve boolean per capire se mostrarle in anonimo o no)
+                            }
+                        }
+                    }catch(ListaVuotaException e){
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+                //cerca ristoranti
+                case 4:
+                    ArrayList<Ristorante> ristorantiCercati= (ArrayList<Ristorante>) ricercaConFiltri();
+                    List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiCercati);
+                    Ristorante visto=dettagliRistorante(ristorantiTrovati);
+                    if (visto!=null){
+                        //utilizzo metodo visualizza recensioni per vedere recensioni in anonimo
+                    }
+                    break;
+                default:
+                    System.out.println("Input non valido, inserire un intero che si riferisce a una delle operazioni descritte");
+            }
         }
-        //stampe per la scelta: login, registrazione, visualizza ristoranti vicini, ricerca
-        /*switch case in base alla scelta:
-        -login= chiama paginaLogin
-        -registrazione= chiama paginaRegistrazione
-        -visualizza ristoranti vicini= chiama paginaVisualizzaVicini(luogo), che chiamerà ricerca con solo luogo diverso da null
-        -ricerca= chiama paginaFiltriRicerca, chiede al cliente che filtri vuole mettere
-         */
+
+        //ricerca= chiama paginaFiltriRicerca, chiede al cliente che filtri vuole mettere
 
     }
 
+    public static Ristorante dettagliRistorante(List<String[]> ristoranti){
+        System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti?");
+        System.out.println("1: Sì \n2: No");
+        int scelta= IntInput();
+        if(scelta==1){
+            int max= ristoranti.size();
+            System.out.println("Digita il numero che si riferisce al ristorante di cui vuoi informazioni:");
+            boolean corretto= true;
+            int ristoranteScelto;
+            do {
+                ristoranteScelto = IntInput();
+                if (ristoranteScelto > max) {
+                    System.out.println("Il numero scelto non corrisponde a un ristorante, controlla la lista di ristoranti e riprova:");
+                    corretto= false;
+                }else{
+                    corretto= true;
+                }
+            }while(!corretto);
+
+            //recupero nome e città ristorante
+            String[] riga= ristoranti.get(ristoranteScelto-1);
+            Ristorante scelto=gestoreRistorante.visualizzaRistorante(riga[0], riga[1]);
+            //bisogna ancora aggiungere il toString di ristoranti
+            System.out.println(scelto.toString());
+            return scelto;
+        }else{
+            return null;
+        }
+    }
+
+    public static List<Ristorante> ricercaConFiltri(){
+        String citta= null, tipologiaCucina= null;
+        Double prezzoMassimo= null, prezzoMinimo= null, stelleMinimo= null;
+        Boolean delivery= null, prenotazione= null;
+        System.out.println("\nScegli i filtri che vuoi mettere! Rispondi con si o no");
+        System.out.println("Filtro città:");
+        boolean filtroCitta= siNoInput();
+        System.out.println("Filtro tipo cucina:");
+        boolean filtroCucina= siNoInput();
+        System.out.println("Filtro prezzo minimo:");
+        boolean filtroMinimo= siNoInput();
+        System.out.println("Filtro prezzo massimo:");
+        boolean filtroMassimo= siNoInput();
+        System.out.println("Filtro delivery:");
+        boolean filtroDelivery= siNoInput();
+        System.out.println("Filtro prenotazione:");
+        boolean filtroPrenotazione= siNoInput();
+        System.out.println("Filtro stelle:");
+        boolean filtroStelle= siNoInput();
+        //con if ora gli faccio aggiungere i filtri veri e propri
+        if(filtroCitta){
+            System.out.println("Inserisci la città:");
+            citta= StringInput();
+        }
+        if(filtroCucina){
+            System.out.println("Inserisci la tipologia di cucina:");
+            //stampo le tipologie presenti
+            System.out.println("");
+            int tipologia= IntInput();
+            //if-else per dare poi valore corretto
+        }
+        if(filtroMinimo){
+            System.out.println("Inserisci la prezzo minimo:");
+            prezzoMinimo= doubleInput();
+        }
+        if(filtroMassimo){
+            System.out.println("Inserisci la prezzo massimo:");
+            prezzoMassimo= doubleInput();
+        }
+        if(filtroDelivery){
+            System.out.println("Inserisci si o no se vuoi che delivery sia disponibile:");
+            delivery= siNoInput();
+        }
+        if(filtroPrenotazione){
+            System.out.println("Inserisci si o no se vuoi che prenotazione sia disponibile:");
+            prenotazione= siNoInput();
+        }
+        if(filtroStelle){
+            System.out.println("Inserisci il numero di stelle minimo che vuoi nel ristorante:");
+            stelleMinimo= doubleInput();
+        }
+        List<Ristorante> ristorantiCercati= gestoreRistorante.cercaRistoranti(tipologiaCucina, citta, prezzoMinimo, prezzoMassimo, delivery, prenotazione, stelleMinimo);
+        return ristorantiCercati;
+
+    }
+
+    public static List<String[]> stampaRistoranti(List<Ristorante> ristoranti){
+        int numero= 1;
+        List<String[]> matriceRistoranti= new ArrayList<>();
+        for (Ristorante ris : ristoranti) {
+            System.out.println(numero++ + ris.getNome() + ris.getCitta());
+            //creo la mia riga che contiene nome e città (indice 0 = numero 1 stampato)
+            String[] riga= new String[2];
+            riga[0]= ris.getNome();
+            riga[1]= ris.getCitta();
+            matriceRistoranti.add(riga);
+        }
+        return matriceRistoranti;
+    }
     //metodi di controllo dell'input
     //controllo che sia una stringa
     public static String StringInput(){
@@ -196,20 +326,36 @@ public class TheKnife {
             System.out.println("Input non valido, inserire una stringa!");
             scanner.nextLine();
         }
-        String input = scanner.nextLine();
-
-        return input;
+        return scanner.nextLine();
     }
-
     //controllo che sia un intero
     public static int IntInput(){
         while(!scanner.hasNextInt()) {
             System.out.println("Input non valido, inserire un intero!");
-            scanner.nextInt();
+            scanner.next();
         }
-        int input = scanner.nextInt();
+        return scanner.nextInt();
+    }
 
-        return input;
+    public static double doubleInput(){
+        while (!scanner.hasNextDouble()) {
+            System.out.println("Input non valido, inserire un numero!");
+            scanner.next();
+        }
+        return scanner.nextDouble();
+    }
+    //controllo che sia o si o no e restituisco true se si, false se no
+    public static boolean siNoInput(){
+        do{
+            String scelta= StringInput();
+            if (scelta.equalsIgnoreCase("si")){
+                return true;
+            }else if (scelta.equalsIgnoreCase("no")){
+                return false;
+            }else{
+                System.out.println("Input non valido, inserire o si o no!");
+            }
+        }while(true);
     }
 
 }
