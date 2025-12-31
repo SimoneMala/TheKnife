@@ -52,7 +52,7 @@ public class GestoreRecensione {
 
 
     //mostra recensioni del theknife.Ristorante
-    public String visualizzaRecensioni(Ristorante ris) {
+    public String visualizzaRecensioni(Ristorante ris, Utente u) {
 
         if (recensioni.isEmpty()) {
             throw new IllegalArgumentException("la lista è vuota");
@@ -67,6 +67,7 @@ public class GestoreRecensione {
                 recensioneRis += "Nome Ristorante: " + rec.getNomeRistorante()
                         + "\nStelle: " + rec.getStelle()
                         + "\nTesto: " + rec.getTesto();
+                        + "\nUsername: " + rec.getUsername();
 
                 if (rec.getRispostaRecensione() != null) {
                     recensioneRis += "\nRisposta: " + rec.getRispostaRecensione();
@@ -91,8 +92,8 @@ public class GestoreRecensione {
     }
 
     //inserisce nuova recensione
-    public void inserisciRecensione(Ristorante ris, String testo, int stelle) {
-        Recensione nuova = new Recensione(ris.getNome(), testo, stelle, null);
+    public void inserisciRecensione(Ristorante ris, String testo, int stelle, String username) {
+        Recensione nuova = new Recensione(ris.getNome(), testo, stelle, null, username);
         recensioni.add(nuova);
         salvaSuFile();
     }
@@ -130,11 +131,21 @@ public class GestoreRecensione {
         }
 
         if (cont == 0) {
-            System.out.println("Nessuna recensione presente per questo ristorante.");
+            throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         } else {
             double media = (double) sommaStelle / cont;
             System.out.println("Numero di recensioni:" + cont);
             System.out.println("valutazione media:" + media);
+        }
+    }
+
+    public void visualizzaRecensioniperUtente (Utente u, Ristorante r) {
+        for (Recensione rec : recensioni) {
+            if (rec.getUsername().equals(u.getUsername()) && rec.getNomeRistorante().equals(r.getNome()) {
+                return rec;
+            } else {
+                throw new IllegalArgumentException("Nessuna recensione trovata per questo ristorante.");
+            }
         }
     }
 }

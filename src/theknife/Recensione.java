@@ -7,6 +7,7 @@ public class Recensione {
     private String testo;
     private int stelle;
     private String rispostaRecensione;
+    private String username;
 
     //costruttore
     public Recensione(String nomeRistorante, String testo, int stelle, String rispostaRecensione){
@@ -48,12 +49,16 @@ public class Recensione {
          this.rispostaRecensione=rispostaRecensione;
     }
 
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
     @Override
     public String toString(){
         return "theknife.Ristorante:" + nomeRistorante +
                 "\nTesto recensione:" + testo +
                 "\nValutazione in stelle:" + stelle +
                 "\nRisposta alla recensione:" + rispostaRecensione;
+                "\nUsername:" + username;
     }
 
 }
