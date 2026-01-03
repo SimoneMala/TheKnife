@@ -148,4 +148,24 @@ public class GestoreRecensione {
             }
         }
     }
+    //metodo per controllare input utente
+    private static String gestisciInput(String msg, Scanner sc, boolean blank) {
+        String input = "";
+        do {
+            System.out.println(msg);
+            input = sc.nextLine();
+        } while (input.isEmpty() && blank);
+        return input;
+    }
+
+
+    //metodo di navigazione ristoranti
+    private static void NavigazioneRistoranti(Utente u, Scanner s, List<Ristorante> listaRistoranti) {
+        if (listaRistoranti == null || listaRistoranti.isEmpty()) {
+            System.out.println("Nessun ristorante trovato");
+            return;
+        }
+    }
+
+
 }
