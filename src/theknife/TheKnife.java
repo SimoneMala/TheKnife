@@ -533,4 +533,137 @@ public class TheKnife {
 
     }
 
+    public static void paginaRistoratore(Utente ristoratoreLoggato, Scanner sc, GestoreRistorante gestore){
+        int scelta;
+
+        do {
+            //stampe per pagina ristoratore
+            System.out.println("Benvenuto" + ristoratoreLoggato.getNome() + " nell'area Ristoratore!");
+            System.out.println("Scegli l'operazione da effettuare:");
+            System.out.println("1. Aggiungi Ristorante");
+            System.out.println("2. Visualizza Riepilogo Recensioni Ristorante");
+            System.out.println("3. Visualizza Recensioni Ristorante");
+            System.out.println("4. Rispondi a una Recensione");
+            System.out.println("0. Logout/ Torna indietro");
+            System.out.println("Funzione Scelta;");
+
+            //Input scelta con gestione eccezioni
+            try {
+                scelta = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido, riprova");
+                sc.next(); //per pulire lo scanner
+                scelta = -1; //valore di default per far ripartire il ciclo
+            }
+
+            switch (scelta) {
+                case 1:
+                    String nomeNuovoRistorante= "";
+                    boolean trovatoDuplicato;
+                    do{
+                        System.out.println("Inserisci il nome del Ristorante:");
+                        nomeNuovoRistorante = sc.nextLine();
+                        trovatoDuplicato = false;
+
+                        for(Ristorante r : gestoreRistorante.getElencoRistoranti()){
+                            if(r.getNome().equalsIgnoreCase(nomeNuovoRistorante)){
+                                System.out.println("Nome" + nomeNuovoRistorante + "già presente, riprova.");
+                                trovatoDuplicato = true;
+                                break;
+                            }
+                        }
+                    } while(trovatoDuplicato);
+                    Ristorante r = datiRistorante(ristoratoreLoggato, sc, nomeNuovoRistorante);
+                    gestore.aggiungiRistorante(r);
+                    System.out.println("Ristorante aggiunto con successo.");
+                    break;
+                case 2:
+                    System.out.println("---- Riepilogo Ristoranti ----");
+                    List<Ristorante> ristorantiProprietario = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
+                    for (Ristorante rist : ristorantiProprietario) {
+                        System.out.println("Ristorante: " + rist.getNome());
+                        try {
+                            gestoreRecensione.visualizzaRiepilogo(rist);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Inserisci il nome del ristorante di cui vuoi visualizzare le recensioni:");
+                    sc.nextLine(); // Consumare la nuova linea rimasta
+                    String nomeRistorante = sc.nextLine();
+                    for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
+                        if(ristoranti.getNome().equals(nomeRistorante)) {
+                            try {
+                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioni(ristoranti, ristoratoreLoggato);
+                                for (Recensione rec : recensioni) {
+                                    System.out.println(rec.toString());
+                                }
+                            } catch (IllegalArgumentException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    System.out.println("Inserisci il nome del ristorante di cui vuoi rispondere a una recensione:");
+                    sc.nextLine(); // Consumare la nuova linea rimasta
+                    String nomeRist = sc.nextLine();
+                    for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
+                        if(ristoranti.getNome().equals(nomeRist)) {
+                            try {
+                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioni(ristoranti, ristoratoreLoggato);
+                                for (Recensione rec : recensioni) {
+                                    System.out.println(rec.toString());
+                                }
+                                System.out.println("Inserisci nome utente della recensione a cui vuoi rispondere:");
+                                String usernameRecensione = sc.nextLine();
+                                System.out.println("Inserisci la tua risposta:");
+                                String risposta = sc.nextLine();
+                                for (Recensione rec : recensioni) {
+                                    if (rec.getUsername().equals(usernameRecensione))
+                                        gestoreRecensione.rispondiRecensione(rec, risposta);
+                                }
+                            } catch (IllegalArgumentException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                    }
+                    break;
+                case 0:
+                    System.out.println("Logout effettuato.");
+                    break;
+                default:
+                    System.out.println("Scelta non valida, riprova.");
+            }
+        } while(scelta != 0);
+    }
+
+    public static Ristorante datiRistorante(Utente ristoratoreLoggato, Scanner sc, String nomeControllato) {
+        System.out.print("Nazione: ");
+        String nazione = sc.nextLine();
+        System.out.print("Città: ");
+        String citta = sc.nextLine();
+        System.out.print("Indirizzo: ");
+        String indirizzo = sc.nextLine();
+        System.out.print("Latitudine: ");
+        double latitudine = sc.nextDouble();
+        System.out.print("Longitudine: ");
+        double longitudine = sc.nextDouble();
+        System.out.print("Prezzo Medio: ");
+        double prezzoMedio = sc.nextDouble();
+        System.out.print("Delivery (true/false): ");
+        boolean delivery = sc.nextBoolean();
+        System.out.print("Prenotazione (true/false): ");
+        boolean prenotazione = sc.nextBoolean();
+        sc.nextLine(); // Consumare la nuova linea rimasta
+        System.out.print("Tipo di Cucina: ");
+        String tipoCucina = sc.nextLine();
+        Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
+        String nomeProprietario = ristoratoreLoggato.getNome();
+        return new Ristorante(nomeControllato, nazione, citta, indirizzo, latitudine, longitudine, prezzoMedio,
+                delivery, prenotazione, tipoCucina, stelle, nomeProprietario);
+    }
+
 }

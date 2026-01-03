@@ -78,4 +78,18 @@ public class GestoreRistorante {
             e.printStackTrace();
         }
     }
+
+    public List<Ristorante> getRistoranteDi(String nomeProprietario){
+        List<Ristorante> risultati = new ArrayList<>();
+        for(Ristorante r: elencoRistoranti){
+            if(r.getNomeProprietario().equals(nomeProprietario)){
+                risultati.add(r);
+            }
+        }
+        return risultati;
+    }
+
+    public List<Ristorante> getElencoRistoranti() {
+        return elencoRistoranti;
+    }
 }

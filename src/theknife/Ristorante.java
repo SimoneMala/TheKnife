@@ -9,14 +9,16 @@ public class Ristorante {
     private double latitudine;
     private double longitudine;
     private double prezzoMedio;
-    private boolean delivery;
-    private boolean prenotazione;
+    private Boolean delivery;
+    private Boolean prenotazione;
     private String tipoCucina;
-    private double stelle;
+    private Double stelle;
+    private String proprietario;
 
     //costruttore
     public Ristorante(String nome, String nazione, String citta, String indirizzo, double latitudine,
-                      double longitudine, double prezzoMedio, boolean delivery, boolean prenotazione, String tipoCucina){
+                      double longitudine, double prezzoMedio, boolean delivery, boolean prenotazione, String tipoCucina,
+                      Double stelle, String proprietario){
         this.nome = nome;
         this.nazione = nazione;
         this.citta = citta;
@@ -28,6 +30,7 @@ public class Ristorante {
         this.prenotazione = prenotazione;
         this.tipoCucina = tipoCucina;
         this.stelle = stelle;
+        this.proprietario = proprietario;
     }
 
 
@@ -39,10 +42,11 @@ public class Ristorante {
     public double getLatitudine(){return latitudine;}
     public double getLongitudine(){return longitudine;}
     public double getPrezzoMedio(){return prezzoMedio;}
-    public boolean getDelivery(){return delivery;}
-    public boolean getPrenotazione(){return prenotazione;}
+    public Boolean getDelivery(){return delivery;}
+    public Boolean getPrenotazione(){return prenotazione;}
     public String getTipoCucina(){return tipoCucina;}
-    public double getStelle(){return stelle;}
+    public Double getStelle(){return stelle;}
+    public String getNomeProprietario(){return proprietario;}
 
     //setter
     public void setNome(String nome){this.nome = nome;}
@@ -56,6 +60,21 @@ public class Ristorante {
     public void setPrenotazione(boolean prenotazione) {this.prenotazione = prenotazione;}
     public void setTipoCucina(String tipoCucina){this.tipoCucina = tipoCucina;}
     public void setStelle(double stelle){this.stelle = stelle;}
+    public void setProprietario(String proprietario){this.proprietario = proprietario;}
 
+    public String toString(){
+        return "Ristorante: " + nome +
+                "\nNazione: " + nazione +
+                "\nCittà: " + citta +
+                "\nIndirizzo: " + indirizzo +
+                "\nLatitudine: " + latitudine +
+                "\nLongitudine: " + longitudine +
+                "\nPrezzo Medio: " + prezzoMedio +
+                "\nDelivery: " + delivery +
+                "\nPrenotazione: " + prenotazione +
+                "\nTipo di Cucina: " + tipoCucina +
+                "\nValutazione in Stelle: " + stelle +
+                "\nNome Proprietario: " + proprietario;
+    }
 
 }
