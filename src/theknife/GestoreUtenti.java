@@ -1,9 +1,12 @@
 package theknife;
 
+import com.google.gson.GsonBuilder;
 import org.mindrot.jbcrypt.BCrypt;
 import theknife.eccezioni.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -12,28 +15,34 @@ public class GestoreUtenti {
     //campi
     //lista che contiene i dati del JSON riguardo agli utenti
     private List<Utente> listaUtenti;
-    private String percorsoFileMemorizzato;
-
+    private final String percorsoFileMemorizzato;
+    private final Gson gson;
     //nel costruttore poi chiameremo il metodo carica che carica dal file json alla lista i miei utenti
     public GestoreUtenti(String nomeFileJson) {
+        this.percorsoFileMemorizzato=nomeFileJson;
+        this.gson= new GsonBuilder().setPrettyPrinting().create();
+        File file= new File(nomeFileJson);
+        if (file.exists() && file.length()>0) {
+            try {
+                //leggo contenuto del file e lo inserisco tutto in una string
+                String contenutoJson = Files.readString(Path.of(nomeFileJson));
+                Gson gson = new Gson();
+                //inserisco il contenuto nella mia lista
+                this.listaUtenti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>() {
+                }.getType());
+            } catch (Exception e) {
+                System.err.println("Impossibile caricare dal file utenti");
+            }
+        }else{
+            //se il mio file risulta vuoto creo comunque una lista vuota
+            this.listaUtenti= new ArrayList<>();
+        }
 
-        try {
-            //leggo contenuto del file e lo inserisco tutto in una string
-            String contenutoJson = Files.readString(Path.of(nomeFileJson));
-            Gson gson = new Gson();
-            //inserisco il contenuto nella mia lista
-            this.listaUtenti= gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>(){}.getType());
-        } catch (Exception e) {
-            System.err.println("Impossibile caricare dal file utenti");
-        }
-        //se il mio file risulta vuoto, creo comunque una lista vuota
-        if(this.listaUtenti==null) {
-            this.listaUtenti = new ArrayList<Utente>();
-        }
+
     }
 
     //metodo get
-    public List getListaUtenti() {
+    public List<Utente> getListaUtenti() {
         return listaUtenti;
     }
 
@@ -62,7 +71,7 @@ public class GestoreUtenti {
         if (utente == null) {
             throw new NullPointerException("Utente non valido");
         }
-        //aggiungo l'utenten alla lista
+        //aggiungo l'utente alla lista
         this.listaUtenti.add(utente);
 
         //aggiungo il mio nuovo utente anche su JSON
@@ -71,12 +80,10 @@ public class GestoreUtenti {
 
     }
 
-    public void modificaFileJsonUtenti(List modifica){
+    public void modificaFileJsonUtenti(List<Utente> modifica){
         //cambio la lista in quella da nuova
         this.listaUtenti = modifica;
-
         try{
-            Gson gson = new Gson();
             //metto in una stringa il contenuto della lista in formato Json
             String contenutoArray= gson.toJson(modifica);
             //metto nel file Json la stringa con il nuovo contenuto
