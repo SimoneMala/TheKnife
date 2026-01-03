@@ -15,13 +15,12 @@ public class TheKnife {
     private static GestoreUtenti gestoreUtenti;
 
     public static void main(String[] args) {
-        //se è il primo avvio dell'applicazione, quindi il file json è vuoto, converto il csv in json
-        //...
 
         //creo i gestori, che mi serviranno per gestire tutti i dati
         scanner = new Scanner(System.in);
         gestoreUtenti= new GestoreUtenti("Utenti.json");
         gestorePreferiti= new GestorePreferiti("Preferiti.json");
+        //se è il primo accesso il gestore ristorante metterà il contenuto del csv all'interno del file json
         gestoreRistorante= new GestoreRistorante("Ristoranti.json");
         gestoreRecensione= new GestoreRecensione("Recensioni.json");
 
@@ -96,9 +95,9 @@ public class TheKnife {
         }
         //controllo del ruolo per mandarlo alla pagina giusta
         if (utente.getRuolo().equals(Utente.Ruolo.CLIENTE)){
-            paginaUtente(Utente u);
+            paginaUtente(utente);
         }else{
-            //paginaRistoratore(utente)
+            paginaRistoratore(utente);
         }
     }
 
@@ -173,7 +172,7 @@ public class TheKnife {
         System.out.println("Benvenuto nell'area Guest!");
         //scelta dell'operazione
         while (true){
-            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti");
+            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
             int op= scanner.nextInt();
 
             switch (op){
@@ -194,8 +193,7 @@ public class TheKnife {
                             List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiVicini);
                             Ristorante visto=dettagliRistorante(ristorantiTrovati);
                             if(visto!=null){
-                                //utilizzo metodo visualizza recensioni per vedere recensioni in anonimo
-                                //(all'interno del metodo serve boolean per capire se mostrarle in anonimo o no)
+                                recensioniAnonime(visto);
                             }
                         }
                     }catch(ListaVuotaException e){
@@ -208,16 +206,33 @@ public class TheKnife {
                     List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiCercati);
                     Ristorante visto=dettagliRistorante(ristorantiTrovati);
                     if (visto!=null){
-                        //utilizzo metodo visualizza recensioni per vedere recensioni in anonimo
+                        recensioniAnonime(visto);
                     }
                     break;
+                case 0:
+                    return;
                 default:
                     System.out.println("Input non valido, inserire un intero che si riferisce a una delle operazioni descritte");
             }
         }
+    }
 
-        //ricerca= chiama paginaFiltriRicerca, chiede al cliente che filtri vuole mettere
-
+    public static void recensioniAnonime(Ristorante ristorante){
+        System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "?");
+        boolean scelta= siNoInput();
+        ArrayList<Recensione> recensioniRistorante;
+        if(scelta){
+            System.out.println("Recensioni per il ristorante " + ristorante.getNome());
+            recensioniRistorante= (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioni(ristorante);
+            int count=1;
+            for(Recensione r: recensioniRistorante){
+                if(r.getRispostaRecensione()!=null) {
+                    System.out.println(count++ + r.getTesto() + r.getStelle() + r.getRispostaRecensione());
+                }else{
+                    System.out.println(count++ + r.getTesto() + r.getStelle());
+                }
+            }
+        }
     }
 
     public static Ristorante dettagliRistorante(List<String[]> ristoranti){
@@ -278,7 +293,7 @@ public class TheKnife {
             System.out.println("Inserisci la tipologia di cucina:");
             //stampo le tipologie presenti
             System.out.println("");
-            int tipologia= IntInput();
+            tipologiaCucina= StringInput();
             //if-else per dare poi valore corretto
         }
         if(filtroMinimo){
@@ -359,7 +374,7 @@ public class TheKnife {
     }
 
     //accesso Utente
-    public void paginaUtente(Utente u) {
+    public static void paginaUtente(Utente u) {
         int scelta;
 
         do {
@@ -431,7 +446,7 @@ public class TheKnife {
         } while (scelta != 0);
     }
 
-    public void ulterioriInformazioni (Utente u, Ristorante visto, List<Ristorante> ristorantiVicini, int ristoranteScelto){
+    public static void ulterioriInformazioni (Utente u, Ristorante visto, List<Ristorante> ristorantiVicini, int ristoranteScelto){
 
         int sceltaInterna;
 
