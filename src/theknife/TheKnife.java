@@ -533,7 +533,7 @@ public class TheKnife {
 
     }
 
-    public static void paginaRistoratore(Utente ristoratoreLoggato, Scanner sc, GestoreRistorante gestore){
+    public static void paginaRistoratore(Utente ristoratoreLoggato){
         int scelta;
 
         do {
@@ -549,10 +549,10 @@ public class TheKnife {
 
             //Input scelta con gestione eccezioni
             try {
-                scelta = sc.nextInt();
+                scelta = scanner.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Input non valido, riprova");
-                sc.next(); //per pulire lo scanner
+                scanner.next(); //per pulire lo scanner
                 scelta = -1; //valore di default per far ripartire il ciclo
             }
 
@@ -562,7 +562,7 @@ public class TheKnife {
                     boolean trovatoDuplicato;
                     do{
                         System.out.println("Inserisci il nome del Ristorante:");
-                        nomeNuovoRistorante = sc.nextLine();
+                        nomeNuovoRistorante = scanner.nextLine();
                         trovatoDuplicato = false;
 
                         for(Ristorante r : gestoreRistorante.getElencoRistoranti()){
@@ -573,8 +573,8 @@ public class TheKnife {
                             }
                         }
                     } while(trovatoDuplicato);
-                    Ristorante r = datiRistorante(ristoratoreLoggato, sc, nomeNuovoRistorante);
-                    gestore.aggiungiRistorante(r);
+                    Ristorante r = datiRistorante(ristoratoreLoggato,nomeNuovoRistorante);
+                    gestoreRistorante.aggiungiRistorante(r);
                     System.out.println("Ristorante aggiunto con successo.");
                     break;
                 case 2:
@@ -591,8 +591,8 @@ public class TheKnife {
                     break;
                 case 3:
                     System.out.println("Inserisci il nome del ristorante di cui vuoi visualizzare le recensioni:");
-                    sc.nextLine(); // Consumare la nuova linea rimasta
-                    String nomeRistorante = sc.nextLine();
+                    scanner.nextLine(); // Consumare la nuova linea rimasta
+                    String nomeRistorante = scanner.nextLine();
                     for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
                         if(ristoranti.getNome().equals(nomeRistorante)) {
                             try {
@@ -608,8 +608,8 @@ public class TheKnife {
                     break;
                 case 4:
                     System.out.println("Inserisci il nome del ristorante di cui vuoi rispondere a una recensione:");
-                    sc.nextLine(); // Consumare la nuova linea rimasta
-                    String nomeRist = sc.nextLine();
+                    scanner.nextLine(); // Consumare la nuova linea rimasta
+                    String nomeRist = scanner.nextLine();
                     for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
                         if(ristoranti.getNome().equals(nomeRist)) {
                             try {
@@ -618,9 +618,9 @@ public class TheKnife {
                                     System.out.println(rec.toString());
                                 }
                                 System.out.println("Inserisci nome utente della recensione a cui vuoi rispondere:");
-                                String usernameRecensione = sc.nextLine();
+                                String usernameRecensione = scanner.nextLine();
                                 System.out.println("Inserisci la tua risposta:");
-                                String risposta = sc.nextLine();
+                                String risposta = scanner.nextLine();
                                 for (Recensione rec : recensioni) {
                                     if (rec.getUsername().equals(usernameRecensione))
                                         gestoreRecensione.rispondiRecensione(rec, risposta);
@@ -640,26 +640,26 @@ public class TheKnife {
         } while(scelta != 0);
     }
 
-    public static Ristorante datiRistorante(Utente ristoratoreLoggato, Scanner sc, String nomeControllato) {
+    public static Ristorante datiRistorante(Utente ristoratoreLoggato, String nomeControllato) {
         System.out.print("Nazione: ");
-        String nazione = sc.nextLine();
+        String nazione = scanner.nextLine();
         System.out.print("Città: ");
-        String citta = sc.nextLine();
+        String citta = scanner.nextLine();
         System.out.print("Indirizzo: ");
-        String indirizzo = sc.nextLine();
+        String indirizzo = scanner.nextLine();
         System.out.print("Latitudine: ");
-        double latitudine = sc.nextDouble();
+        double latitudine = scanner.nextDouble();
         System.out.print("Longitudine: ");
-        double longitudine = sc.nextDouble();
+        double longitudine = scanner.nextDouble();
         System.out.print("Prezzo Medio: ");
-        double prezzoMedio = sc.nextDouble();
+        double prezzoMedio = scanner.nextDouble();
         System.out.print("Delivery (true/false): ");
-        boolean delivery = sc.nextBoolean();
+        boolean delivery = scanner.nextBoolean();
         System.out.print("Prenotazione (true/false): ");
-        boolean prenotazione = sc.nextBoolean();
-        sc.nextLine(); // Consumare la nuova linea rimasta
+        boolean prenotazione = scanner.nextBoolean();
+        scanner.nextLine(); // Consumare la nuova linea rimasta
         System.out.print("Tipo di Cucina: ");
-        String tipoCucina = sc.nextLine();
+        String tipoCucina = scanner.nextLine();
         Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
         String nomeProprietario = ristoratoreLoggato.getNome();
         return new Ristorante(nomeControllato, nazione, citta, indirizzo, latitudine, longitudine, prezzoMedio,
