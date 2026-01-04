@@ -52,13 +52,37 @@ public class Recensione {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
+
+    //metodo equals per confrontare due recensioni
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Recensione rec = (Recensione) obj;
+
+        return username.equals(rec.username) &&
+                nomeRistorante.equals(rec.nomeRistorante);
+    }
+
+    //metodo toString
     @Override
     public String toString(){
         return "theknife.Ristorante:" + nomeRistorante +
-                "\nTesto recensione:" + testo +
-                "\nValutazione in stelle:" + stelle +
-                "\nRisposta alla recensione:" + rispostaRecensione;
                 "\nUsername:" + username;
+                "\nTesto recensione:" + testo +
+                "\nValutazione in stelle:" + stelle;
+
+                if (rispostaRecensione != null){
+                    return "\nRisposta alla recensione:" + rispostaRecensione;
+                } else {
+                    return "\nNessuna risposta alla recensione.";
+                }
+    }
+    //metodo hashcode
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, nomeRistorante);
     }
 
 }

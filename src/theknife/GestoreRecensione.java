@@ -1,7 +1,10 @@
 package theknife;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -12,26 +15,30 @@ public class GestoreRecensione {
     //lista che contiene i dati del JSON sulle recensioni
     private List<Recensione> recensioni;
     private String percorsoFileMemorizzato;
+    private final Gson gson;
 
-    //nel costruttore includiamo il metodo che carica le recensioni dal file JSON
+    //nel costruttore includo il metodo che carica le recensioni dal file JSON
     public GestoreRecensione(String nomeFileJson) {
+        this.percorsoFileMemorizzato=nomeFileJson;
+        this.gson= new GsonBuilder().setPrettyPrinting().create();
+        File file= new File(nomeFileJson);
+        if (file.exists() && file.length()>0) {
+            try {
+                //leggo contenuto del file e lo inserisco tutto in una string, poi inserisco il contenuto in una lista
+                String contenutoJson = Files.readString(Path.of(nomeFileJson));
+                Gson gson = new Gson();
 
-        try {
-            //leggo contenuto del file e lo inserisco tutto in una string
-            String contenutoJson = Files.readString(Path.of(nomeFileJson));
-            Gson gson = new Gson();
-
-            //inserisco il contenuto nella mia lista
-            this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
-            }.getType());
-
-        } catch (Exception e) {
-            System.err.println("Impossibile caricare le recensioni");
+                this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>() {
+                }.getType());
+            } catch (Exception e) {
+                System.err.println("Impossibile caricare dal file recensioni");
+            }
+        }else{
+            //creazione lista vuota se file non esiste o è vuoto
+            this.listaUtenti= new ArrayList<>();
         }
 
-        if (this.recensioni == null) {
-            recensioni = new ArrayList<>();
-        }
+
     }
 
     //metodo get
@@ -52,11 +59,15 @@ public class GestoreRecensione {
 
 
     //mostra recensioni del theknife.Ristorante
-    public String visualizzaRecensioni(Ristorante ris, Utente u) {
+    public List<Recensione> visualizzaRecensioni(Ristorante ris, Utente u) {
 
         if (recensioni.isEmpty()) {
             throw new IllegalArgumentException("la lista è vuota");
         }
+
+        //creo una lista in cui inserire le recensioni del ristorante scelto
+        List<Recensione> recensioniRistorante = new ArrayList<>();
+
         String recensioneRis = "";
         boolean trovato = false;
 
@@ -64,13 +75,18 @@ public class GestoreRecensione {
             if (rec.getNomeRistorante().equals(ris.getNome())) {
                 trovato = true;
 
-                recensioneRis += "Nome Ristorante: " + rec.getNomeRistorante()
-                        + "\nStelle: " + rec.getStelle()
+                recensioneRis += + "\nUsername: " + rec.getUsername();
+                        "\nStelle: " + rec.getStelle()
                         + "\nTesto: " + rec.getTesto();
-                        + "\nUsername: " + rec.getUsername();
+                        + "\n-----------------------";
+
+                        recensioniRistorante.add(rec);
 
                 if (rec.getRispostaRecensione() != null) {
                     recensioneRis += "\nRisposta: " + rec.getRispostaRecensione();
+                    + "\n-----------------------";
+
+                    recensioniRistorante.add(rec);
                 }
             }
         }
@@ -78,11 +94,17 @@ public class GestoreRecensione {
             if (!trovato) {
                 throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         }
-        return recensioneRis;
+        return recensioniRistorante;
     }
 
     //inserisce risposta alla recensione
     public void rispondiRecensione(Recensione rec, String risposta) {
+        for (Recensione tmp : recensioni) {
+            if (tmp.equals(rec)) {
+                rec = tmp;
+                break;
+            }
+        }
         if (rec.getRispostaRecensione() != null) {
             throw new IllegalArgumentException("Risposta già inserita.");
         } else {
@@ -101,9 +123,18 @@ public class GestoreRecensione {
     //modifica recensione esistente
     public void modificaRecensione(Recensione rec, String testoMod, int stelleMod) {
         for (Recensione tmp : recensioni) {
-            if (tmp.equals(rec)) {
-                tmp.setTesto(testoMod);
-                tmp.setStelle(stelleMod);
+            if (tmp.equals(rec) && tmp.getUsername().equals(rec.getUsername())
+                    && tmp.getNomeRistorante().equals(rec.getNomeRistorante())) {
+
+                //modifica il testo solo se inserito qualcosa di diverso da vuoto o spazi
+                if (testoMod != null && !testoMod.trim().isEmpty()) {
+                    tmp.setTesto(testoMod);
+                }
+                //modifica le stelle solo se diverso da 0
+                if (stelleMod >= 1 && stelleMod <= 5) {
+                    tmp.setStelle(stelleMod);
+                }
+
                 salvaSuFile();
                 return;
             }
@@ -139,14 +170,18 @@ public class GestoreRecensione {
         }
     }
 
-    public void visualizzaRecensioniperUtente (Utente u, Ristorante r) {
+    public List<Recensioni> visualizzaRecensioniperUtente (Utente u, Ristorante r) {
+        List<Recensioni> recensioniUtente = new ArrayList<>();
         for (Recensione rec : recensioni) {
             if (rec.getUsername().equals(u.getUsername()) && rec.getNomeRistorante().equals(r.getNome()) {
-                return rec;
-            } else {
-                throw new IllegalArgumentException("Nessuna recensione trovata per questo ristorante.");
+                recensioniUtente.add(rec);
             }
         }
+        if (recensioniUtente.isEmpty()) {
+            throw new IllegalArgumentException("Nessuna recensione presente per questo utente e ristorante.");
+        }
+
+        return recensioniUtente;
     }
     //metodo per controllare input utente
     private static String gestisciInput(String msg, Scanner sc, boolean blank) {
@@ -165,6 +200,15 @@ public class GestoreRecensione {
             System.out.println("Nessun ristorante trovato");
             return;
         }
+    }
+
+    public boolean haLasciatoRecensione(Utente u, Ristorante ris) {
+        for (Recensione rec : recensioni) {
+            if (rec.getUsername().equals(u.getUsername()) && rec.getNomeRistorante().equals(r.getNome())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
