@@ -4,6 +4,8 @@ import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -12,19 +14,27 @@ import java.nio.file.Path;
 public class GestoreRistorante {
     //campi
     private List<Ristorante> elencoRistoranti;
-    private String percorsoFileMemorizzato; //salvo il percorso del file json
+    private final String percorsoFileMemorizzato; //salvo il percorso del file json
+    private final Gson gson;
 
     //costruttore
     public GestoreRistorante(String nomeFileJson){ //passo il percorso del file json
         this.percorsoFileMemorizzato = nomeFileJson;
-        try{
-            //leggo contenuto del file in una stringa
-            String contenutoJson = Files.readString(Path.of(nomeFileJson));
-            Gson gson = new Gson();
-            //prendo la stringa e la converto in array di theknife.Ristorante
-            this.elencoRistoranti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Ristorante>>(){}.getType());
-        } catch (Exception e){
-            e.printStackTrace();}
+        this.gson= new GsonBuilder().setPrettyPrinting().create();
+        File file= new File(nomeFileJson);
+        if (file.exists() && file.length()>0) {
+            try{
+                //leggo contenuto del file in una stringa
+                String contenutoJson = Files.readString(Path.of(nomeFileJson));
+                //prendo la stringa e la converto in array di theknife.Ristorante
+                this.elencoRistoranti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Ristorante>>(){}.getType());
+            } catch(Exception e) {
+                System.err.println("Impossibile caricare dal file Ristoranti");
+            }
+        }else{
+            //se il file non esiste o è vuoto creo una lista vuota
+            this.elencoRistoranti= new ArrayList<>();
+        }
     }
 
     //metodo ricerca con filtri
@@ -71,11 +81,10 @@ public class GestoreRistorante {
     public void modificaFileJsonRistoranti(List<Ristorante> modifica) {
         this.elencoRistoranti = modifica;
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String contenutoArrayRistorantti = gson.toJson(this.elencoRistoranti);
             Files.writeString(Path.of(this.percorsoFileMemorizzato), contenutoArrayRistorantti);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch(Exception e) {
+            System.err.println("Impossibile caricare dal file Ristoranti");
         }
     }
 

@@ -26,7 +26,6 @@ public class GestoreUtenti {
             try {
                 //leggo contenuto del file e lo inserisco tutto in una string
                 String contenutoJson = Files.readString(Path.of(nomeFileJson));
-                Gson gson = new Gson();
                 //inserisco il contenuto nella mia lista
                 this.listaUtenti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>() {
                 }.getType());

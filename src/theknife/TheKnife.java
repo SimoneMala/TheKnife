@@ -346,7 +346,7 @@ public class TheKnife {
     //controllo che sia un intero
     public static int IntInput(){
         while(!scanner.hasNextInt()) {
-            System.out.println("Input non valido, inserire un intero!");
+            System.out.println("Input non valido, inserire un numero senza virgola!");
             scanner.next();
         }
         return scanner.nextInt();
@@ -569,14 +569,9 @@ public class TheKnife {
             System.out.println("0. Logout/ Torna indietro");
             System.out.println("Funzione Scelta;");
 
-            //Input scelta con gestione eccezioni
-            try {
-                scelta = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Input non valido, riprova");
-                scanner.next(); //per pulire lo scanner
-                scelta = -1; //valore di default per far ripartire il ciclo
-            }
+            //Input scelta
+
+            scelta = IntInput();
 
             switch (scelta) {
                 case 1:
@@ -670,15 +665,15 @@ public class TheKnife {
         System.out.print("Indirizzo: ");
         String indirizzo = scanner.nextLine();
         System.out.print("Latitudine: ");
-        double latitudine = scanner.nextDouble();
+        double latitudine = doubleInput();
         System.out.print("Longitudine: ");
-        double longitudine = scanner.nextDouble();
+        double longitudine = doubleInput();
         System.out.print("Prezzo Medio: ");
-        double prezzoMedio = scanner.nextDouble();
+        double prezzoMedio = doubleInput();
         System.out.print("Delivery (true/false): ");
-        boolean delivery = scanner.nextBoolean();
+        boolean delivery = siNoInput();
         System.out.print("Prenotazione (true/false): ");
-        boolean prenotazione = scanner.nextBoolean();
+        boolean prenotazione = siNoInput();
         scanner.nextLine(); // Consumare la nuova linea rimasta
         System.out.print("Tipo di Cucina: ");
         String tipoCucina = scanner.nextLine();
