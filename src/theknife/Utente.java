@@ -11,16 +11,18 @@ public class Utente {
     private String cognome;
     private String username;
     private String password;
-    private String domicilio;
+    private String via;
+    private String citta;
     private Ruolo ruolo;
 
     //costruttore
-    public Utente(String nome, String cognome, String username, String password, String domicilio, Ruolo ruolo) {
+    public Utente(String nome, String cognome, String username, String password, String via, String citta, Ruolo ruolo) {
         this.nome = nome;
         this.cognome = cognome;
         this.username = username;
         this.password = password;
-        this.domicilio = domicilio;
+        this.via = via;
+        this.citta = citta;
         this.ruolo = ruolo;
     }
 
@@ -37,8 +39,11 @@ public class Utente {
     public String getPassword() {
         return password;
     }
-    public String getDomicilio() {
-        return domicilio;
+    public String getVia() {
+        return via;
+    }
+    public String getCitta() {
+        return citta;
     }
     public Ruolo getRuolo() {
         return ruolo;
@@ -57,9 +62,10 @@ public class Utente {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
+    public void setVia(String via) {
+        this.via = via;
     }
+    public void setCitta(String citta) {this.citta = citta;}
     public void setRuolo(Ruolo ruolo) {
         this.ruolo = ruolo;
     }

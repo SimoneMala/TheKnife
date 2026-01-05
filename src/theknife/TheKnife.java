@@ -132,17 +132,20 @@ public class TheKnife {
         //hash della password, sarà quella inserita all'interno dell'utente
         String hashPw = BCrypt.hashpw(password, BCrypt.gensalt());
         System.out.println("Domicilio:");
-        String domicilio= StringInput();
+        System.out.println("Inserire la via:");
+        String via= StringInput();
+        System.out.println("Inserire la città:");
+        String citta= StringInput();
         System.out.println("Ruolo: selezionare 1 per Ristoratore, 2 per Cliente");
         boolean ruoloCorretto= true;
         do {
             int ruolo = IntInput();
             //assegno il ruolo scelto
             if(ruolo==1){
-                u= new Utente(nome, cognome, username, hashPw, domicilio, Utente.Ruolo.RISTORATORE);
+                u= new Utente(nome, cognome, username, hashPw, via, citta, Utente.Ruolo.RISTORATORE);
                 ruoloCorretto= true;
             }else if (ruolo==2){
-                u= new Utente(nome, cognome, username, hashPw, domicilio, Utente.Ruolo.CLIENTE);
+                u= new Utente(nome, cognome, username, hashPw, via, citta, Utente.Ruolo.CLIENTE);
                 ruoloCorretto= true;
             }else{ //se numero non identifica ruolo, lo richiedo
                 System.out.println("L'input inserito non si riferisce a nessun ruolo, inserire un intero tra quelli mostrati " +
@@ -373,42 +376,62 @@ public class TheKnife {
         }while(true);
     }
 
+    private static String gestisciInput(String msg, boolean blank) {
+        String input = "";
+        do {
+            System.out.println(msg);
+            input = scanner.nextLine();
+        } while (input.isEmpty() && blank);
+        return input;
+    }
+
     //accesso Utente
     public static void paginaUtente(Utente u) {
         int scelta;
 
-        do {
-            System.out.println("\nTHE KNIFE - Login" + u.getUsername());
+        while(true) {
+            System.out.println("\nLogin" + u.getUsername());
             System.out.println("1. Visualizza dati personali");
             System.out.println("2. Modifica dati personali");
             System.out.println("3. Visualizza ristoranti vicino a me");
             System.out.println("4. Cerca ristoranti per filtro");
-            System.out.println("0. Esci");
+            System.out.println("5. Visualizza le tue recensioni");
+            System.out.println("0. Torna alla home");
 
-            scelta = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", sc, false));
+            scelta = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", false));
 
             switch (scelta) {
                 //visualizzazione i dati utente
                 case 1:
                     System.out.println("Nome:" + u.getNome() + "\nCognome:" + u.getCognome() + "\nUsername:"
-                            + u.getUsername() + "\nDomicilio:" + u.getDomicilio());
+                            + u.getUsername() + "\nVia:" + u.getVia() + "\nCitta:" + u.getCitta());
                     break;
 
                 //modifica dati utente
                 case 2:
-                    String nuovoNome = gestoreRecensione.gestisciInput("Inserisci il nuovo nome: ", sc, true);
-                    String nuovoCognome = gestoreRecensione.gestisciInput("Inserisci il nuovo cognome: ", sc, true);
-                    String nuovoDomicilio = gestoreRecensione.gestisciInput("Inserisci il nuovo domicilio: ", sc, true);
+                    String nuovoNome = gestisciInput("Inserisci il nuovo nome: ", true);
+                    String nuovoCognome = gestisciInput("Inserisci il nuovo cognome: ", true);
+                    String nuovaVia = gestisciInput("Inserisci la nuova via: ", true);
+                    String nuovaCitta =gestisciInput("Inserisci la nuova citta: ", true);
 
-                    if (!nuovoNome.isEmpty()) {
-                        u.setNome(nuovoNome);
+                    for (Utente utente: gestoreUtenti.getListaUtenti()) {
+                        if (u.equals(utente)) {
+                            if (!nuovoNome.isEmpty()) {
+                                u.setNome(nuovoNome);
+                            }
+                            if (!nuovoCognome.isEmpty()) {
+                                u.setCognome(nuovoCognome);
+                            }
+                            if(!nuovaVia.isEmpty()) {
+                                u.setVia(nuovaVia);
+                            }
+                            if(!nuovaCitta.isEmpty()) {
+                                u.setCitta(nuovaCitta);
+                            }
+                        }
                     }
-                    if (!nuovoCognome.isEmpty()) {
-                        u.setCognome(nuovoCognome);
-                    }
-                    if (!nuovoDomicilio.isEmpty()) {
-                        u.setDomicilio(nuovoDomicilio);
-                    }
+                    gestoreUtenti.modificaFileJsonUtenti(gestoreUtenti.getListaUtenti());
+
                     System.out.println("Dati aggiornati con successo.");
                     break;
 
@@ -416,7 +439,7 @@ public class TheKnife {
                 case 3:
                     try {
                         ArrayList<Ristorante> ristorantiVicini = (ArrayList<Ristorante>) gestoreRistorante.cercaRistoranti
-                                (null, luogo, null, null, false, false, null);
+                                (null, u.getCitta(), null, null, false, false, null);
                         if (!ristorantiVicini.isEmpty()) {
                             System.out.println("Ecco i ristoranti che si trovano vicino a te:");
                             int numero = 1;
@@ -424,7 +447,7 @@ public class TheKnife {
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiVicini);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
 
-                            ulterioriInformazioni(u, visto, ristorantiVicini, ristoranteScelto);
+                            ulterioriInformazioni(u, visto);
 
                         }
                     } catch (ListaVuotaException e) {
@@ -437,121 +460,110 @@ public class TheKnife {
                     ArrayList<Ristorante> ristorantiCercati = (ArrayList<Ristorante>) ricercaConFiltri();
                     List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
                     Ristorante visto = dettagliRistorante(ristorantiTrovati);
-                    ulterioriInformazioni(u, visto, ristorantiVicini, ristoranteScelto);
+                    ulterioriInformazioni(u, visto);
 
                     break;
 
+                //visualizza recensioni
+                case 5:
+                    List<Recensione> recensioniUtente= gestoreRecensione.visualizzaRecensioniperUtente(u);
+                    int cont=1;
+                    for(Recensione rec:  recensioniUtente) {
+                        System.out.println(cont++ + rec.toString());
+                    }
+                    System.out.println("Modifica o elimina le tue recensioni: premere 1 per modificare, 2 per eliminare, 0 per uscire.");
+                    int sceltaOperazione= IntInput();
+                    while(sceltaOperazione!=0 || sceltaOperazione!=1 || sceltaOperazione!=2) {
+                        sceltaOperazione = IntInput();
+                    }
+                    System.out.println("Scegli su quale recensione fare l'operazione (inserisci il numero della recensione):");
+                    int sceltaRecensione = IntInput();
+                    int contatore=1;
+                    Recensione recensione= null;
+                    for(Recensione rec:  recensioniUtente) {
+                        if(sceltaRecensione==contatore){
+                            recensione = rec;
+                        }
+                        contatore ++;
+                    }
+
+                    if (sceltaOperazione == 1) {
+                        System.out.println("Inserisci il testo modificato della recensione (PREMERE INVIO PER NON MODIFICARE):");
+                        String testoModificato = scanner.nextLine();
+                        System.out.println("Inserisci il numero di stelle modificato (PREMERE INVIO PER NON MODIFICARE):");
+                        int stelleModificate = scanner.nextInt();
+                        gestoreRecensione.modificaRecensione(recensione, testoModificato, stelleModificate, u);
+                        System.out.println("Recensione modificata con successo.");
+                    } else if (sceltaOperazione == 2) {
+                        gestoreRecensione.eliminaRecensione(recensione);
+                        System.out.println("Recensione rimossa con successo.");
+                    } else if (sceltaOperazione == 0) {
+                        System.out.println("Uscita dalla gestione delle recensioni.");
+                    }
+                    break;
                 //uscita
                 case 0:
                     System.out.println("Arrivederci!");
-                    default -> System.out.println("Scelta non valida");
+                    return;
+                default: System.out.println("Scelta non valida");
             }
-        } while (scelta != 0);
+        }
     }
 
-    public static void ulterioriInformazioni (Utente u, Ristorante visto, List<Ristorante> ristorantiVicini, int ristoranteScelto){
+    public static void ulterioriInformazioni (Utente u, Ristorante visto){
 
         int sceltaInterna;
 
-        do {
-            System.out.println("""Scegli un'opzione:
-                    1. Lascia una recensione
-                    2. Vai al ristorante successivo
-                    3. Torna al ristorante precedente
-                    4. Inserisci il ristorante tra i preferiti
-                    5. Rimuovi il ristorante dai preferiti
-                    6. Visualizza, modifica o elimina le recensioni che hai lasciato al ristorante
-                    7. Visualizza tutte le recensioni lasciate al ristorante
-                    8. Esci dalla visualizzazione
-                """);
+        while(true){
+            System.out.println("Scegli un'opzione: \n1. Lascia una recensione \n2. Inserisci il ristorante tra i preferiti" +
+                    " \n3. Rimuovi il ristorante dai preferiti" +
+                    " \n4. Visualizza tutte le recensioni lasciate al ristorante \n5. Esci dalla visualizzazione");
 
-            sceltaInterna = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", sc, false));
+            sceltaInterna = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", false));
 
             switch (sceltaInterna) {
 
                 //lascia recensione
                 case 1:
-                    if (gestoreRecensione.haLasciatoRecensione(visto, username)) {
+                    if (gestoreRecensione.haLasciatoRecensione(u, visto)) {
                         System.out.println("Hai già lasciato una recensione per questo ristorante.");
                         break;
                     }
                     System.out.println("Lascia il testo della recensione:");
-                    testo = sc.nextLine();
+                    String testo = StringInput();
                     System.out.println("Inserisci il numero di stelle (1-5):");
-                    stelle = sc.nextInt();
-                    gestoreRecensione.inserisciRecensione(visto, testo, stelle, username);
+                    int stelle = IntInput();
+                    gestoreRecensione.inserisciRecensione(visto, testo, stelle, u.getUsername());
                     System.out.println("Recensione inserita con successo.");
                     break;
 
-                //vai al ristorante successivo
-                case 2:
-                    if (ristoranteScelto < ristorantiVicini.size() - 1) {
-                        ristoranteScelto++;
-                    } else {
-                        System.out.println("Sei già all'ultimo ristorante.");
-                    }
-                    break;
-
-                //vai al ristorante precedente
-                case 3:
-                    if (ristoranteScelto >= 0) {
-                        ristoranteScelto--;
-                    } else {
-                        System.out.println("Sei già al primo ristorante.");
-                    }
-                    break;
-
                 //aggiungi ai preferiti
-                case 4:
+                case 2:
                     System.out.println("Inserimento del ristorante tra i preferiti.");
                     gestorePreferiti.aggiungiPreferiti(u, visto);
                     break;
 
                 //rimozione dai preferiti
-                case 5:
+                case 3:
                     System.out.println("Rimozione del ristorante dai preferiti.");
                     gestorePreferiti.cancellaPreferiti(u, visto);
                     break;
 
-                //visualizza recensioni del ristorante lasciate dall'utente
-                case 6:
-                    System.out.println("Visualizza le recensioni che hai lasciato al ristorante.");
-                    gestoreRecensioni.visualizzaRecensioniPerUtente(visto, u);
-
-                    int sceltaRecensione;
-                    System.out.println("Modifica o elimina le tue recensioni: premere 1 per modificare, 2 per eliminare, 0 per uscire.");
-                    sceltaRecensione = sc.nextInt();
-                    Recensione recensione = getRecensioneUtente(visto, u);
-                    if (sceltaRecensione == 1) {
-                        System.out.println("Inserisci il testo modificato della recensione (PREMERE INVIO PER NON MODIFICARE):");
-                        String testoModificato = sc.nextLine();
-                        System.out.println("Inserisci il numero di stelle modificato (PREMERE INVIO PER NON MODIFICARE):");
-                        int stelleModificate = sc.nextInt();
-                        modificaRecensione(recensione, testoModificato, stelleModificate);
-                        System.out.println("Recensione modificata con successo.");
-                    } else if (sceltaRecensione == 2) {
-                        gestoreRecensione.rimuoviRecensione(visto, recensione);
-                        System.out.println("Recensione rimossa con successo.");
-                    } else if (sceltaRecensione == 0) {
-                        System.out.println("Uscita dalla gestione delle recensioni.");
-                    }
-                    break;
-
                 //visualizza riepilogo recensioni ristorante
-                case 7:
+                case 4:
                     System.out.println("Visualizza il riepilogo delle recensioni del ristorante.");
                     gestoreRecensione.visualizzaRecensioni(visto);
                     gestoreRecensione.visualizzaRiepilogo(visto);
                     break;
 
                 //esci
-                case 8:
+                case 5:
                     System.out.println("Uscita dalla visualizzazione del ristorante.");
-                    break;
+                    return;
                 default:
                     System.out.println("Scelta non valida. Riprova.");
             }
-        }  while (sceltaInterna >= 1 && sceltaInterna <= 8);
+        }
 
     }
 
@@ -613,7 +625,7 @@ public class TheKnife {
                     for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
                         if(ristoranti.getNome().equals(nomeRistorante)) {
                             try {
-                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioni(ristoranti, ristoratoreLoggato);
+                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioniPerRistoratore(ristoranti, ristoratoreLoggato);
                                 for (Recensione rec : recensioni) {
                                     System.out.println(rec.toString());
                                 }
@@ -630,7 +642,7 @@ public class TheKnife {
                     for(Ristorante ristoranti : gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome())) {
                         if(ristoranti.getNome().equals(nomeRist)) {
                             try {
-                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioni(ristoranti, ristoratoreLoggato);
+                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioniPerRistoratore(ristoranti, ristoratoreLoggato);
                                 for (Recensione rec : recensioni) {
                                     System.out.println(rec.toString());
                                 }

@@ -1,5 +1,7 @@
 package theknife;
 
+import java.util.Objects;
+
 public class Recensione {
 
     //campi
@@ -10,7 +12,7 @@ public class Recensione {
     private String username;
 
     //costruttore
-    public Recensione(String nomeRistorante, String testo, int stelle, String rispostaRecensione){
+    public Recensione(String nomeRistorante, String testo, int stelle, String rispostaRecensione, String username){
         if (testo==null || testo.length()>250 || stelle<1 || stelle>5){
             throw new IllegalArgumentException("Dati recensione non validi");
         }
@@ -18,6 +20,7 @@ public class Recensione {
         this.testo=testo;
         this.stelle=stelle;
         this.rispostaRecensione=rispostaRecensione;
+        this.username = username;
     }
 
     //metodi getter e setter
@@ -68,17 +71,16 @@ public class Recensione {
     //metodo toString
     @Override
     public String toString(){
-        return "theknife.Ristorante:" + nomeRistorante +
-                "\nUsername:" + username;
+        String recensione= "Ristorante:" + nomeRistorante +
+                "\nUsername:" + username +
                 "\nTesto recensione:" + testo +
                 "\nValutazione in stelle:" + stelle;
-
-                if (rispostaRecensione != null){
-                    return "\nRisposta alla recensione:" + rispostaRecensione;
-                } else {
-                    return "\nNessuna risposta alla recensione.";
-                }
+        if(this.rispostaRecensione!=null) {
+            return recensione + "\nRisposta alla recensione:" + rispostaRecensione;
+        }
+        return recensione;
     }
+
     //metodo hashcode
     @Override
     public int hashCode() {

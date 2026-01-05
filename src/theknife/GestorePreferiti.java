@@ -1,7 +1,10 @@
 package theknife;
 
+import com.google.gson.GsonBuilder;
 import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
+
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import com.google.gson.reflect.TypeToken;
@@ -12,23 +15,26 @@ public class GestorePreferiti {
 
     //campi
     private List<Preferito> ristorantiPreferiti;
-    private String percorsoFileMemorizzato;
-
+    private final String percorsoFileMemorizzato;
+    private final Gson gson;
     //costruttore a cui poi aggiungere il metodo carica() che carica dal file json i ristoranti nella lista
     public GestorePreferiti(String nomeFile){
-        try{
-            //leggo contenuto del file
-            String contenutoJson= Files.readString(Path.of(nomeFile));
-            Gson gson = new Gson();
-            //metto contenuto del file nella lista
-            this.ristorantiPreferiti= gson.fromJson(contenutoJson, new TypeToken<ArrayList<Preferito>>(){}.getType());
-        } catch (Exception e) {
-            System.err.println("Impossibile caricare i dati dal file Preferiti");
-        }
-
-        //se la lista rimane vuota perchè file non viene trovato o è vuoto la creo vuota
-        if(this.ristorantiPreferiti==null) {
-            ristorantiPreferiti = new ArrayList<Preferito>();
+        this.percorsoFileMemorizzato = nomeFile;
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        File file= new File(nomeFile);
+        if(file.exists() && file.length() > 0) {
+            try {
+                //leggo contenuto del file
+                String contenutoJson = Files.readString(Path.of(nomeFile));
+                //metto contenuto del file nella lista
+                this.ristorantiPreferiti = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Preferito>>() {
+                }.getType());
+            } catch (Exception e) {
+                System.err.println("Impossibile caricare i dati dal file Preferiti");
+            }
+        }else{
+            //se il file risulta vuoto creo comunque una lista nuova
+            this.ristorantiPreferiti= new ArrayList<>();
         }
     }
 
@@ -68,12 +74,12 @@ public class GestorePreferiti {
     }
 
     //restituisce la lista di preferiti per l'utente, per visualizzare la lista nel main la stampo
-    public List visualizzaPreferiti(Utente utente) throws ListaVuotaException{
+    public List<Preferito> visualizzaPreferiti(Utente utente) throws ListaVuotaException{
         if (this.ristorantiPreferiti.isEmpty()){
             throw new ListaVuotaException("Non sono presenti preferiti");
         }
         String nomeUtente= utente.getUsername();
-        List<Preferito> tmp= new ArrayList<Preferito>();
+        List<Preferito> tmp= new ArrayList<>();
         for(Preferito p: this.ristorantiPreferiti){
             if(p.getUsername().equals(nomeUtente)){
                 tmp.add(p);
@@ -85,10 +91,9 @@ public class GestorePreferiti {
         return tmp;
     }
 
-    public void ModificaFileJsonPreferiti(List modifica){
+    public void ModificaFileJsonPreferiti(List<Preferito> modifica){
         this.ristorantiPreferiti=modifica;
         try{
-            Gson gson = new Gson();
             String contenutoArray= gson.toJson(modifica);
             Files.writeString(Path.of(percorsoFileMemorizzato), contenutoArray);
         }catch(Exception e){
