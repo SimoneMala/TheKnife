@@ -73,9 +73,9 @@ public class TheKnife {
     public static void paginaLogin() {
         System.out.println("/nLogin");
         System.out.println("Inserire lo username:");
-        String username = scanner.nextLine();
+        String username = StringInput();
         System.out.println("Inserire la password:");
-        String password = scanner.nextLine();
+        String password = StringInput();
         Utente utente= null;
         boolean successo= true;
         try {
@@ -352,7 +352,9 @@ public class TheKnife {
             System.out.println("Input non valido, inserire un numero senza virgola!");
             scanner.next();
         }
-        return scanner.nextInt();
+        int numero= scanner.nextInt();
+        scanner.nextLine();
+        return numero;
     }
 
     public static double doubleInput(){
@@ -360,7 +362,9 @@ public class TheKnife {
             System.out.println("Input non valido, inserire un numero!");
             scanner.next();
         }
-        return scanner.nextDouble();
+        double numero= scanner.nextDouble();
+        scanner.nextLine();
+        return numero;
     }
     //controllo che sia o si o no e restituisco true se si, false se no
     public static boolean siNoInput(){
