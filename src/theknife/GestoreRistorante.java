@@ -5,7 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -32,8 +34,50 @@ public class GestoreRistorante {
                 System.err.println("Impossibile caricare dal file Ristoranti");
             }
         }else{
-            //se il file non esiste o è vuoto creo una lista vuota
-            this.elencoRistoranti= new ArrayList<>();
+            this.elencoRistoranti = new ArrayList<>();
+            String csvFile = "Dati" + File.separator + "RistorantiTheKnife.csv";
+
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                String riga;
+                br.readLine(); // Salta l'intestazione
+
+                while ((riga = br.readLine()) != null) {
+                    // --- MODIFICA FONDAMENTALE ---
+                    // Questa Regex significa: "Splitta per virgola, ma solo se segue un numero pari di virgolette"
+                    // In pratica: ignora le virgole dentro i testi "..."
+                    String[] v = riga.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                    if (v.length < 12) continue;
+
+                    // Usiamo un metodo 'clean' per togliere le virgolette e gli spazi extra
+                    String name = clean(v[0]);
+                    String nazione = clean(v[1]);
+                    String citta = clean(v[2]);
+                    String indirizzo = clean(v[3]);
+
+                    // Parsing sicuro dei numeri
+                    double latitudine = parseDoubleSafe(clean(v[4]));
+                    double longitudine = parseDoubleSafe(clean(v[5]));
+
+                    int prezzoMedio = Integer.parseInt(clean(v[6]));
+                    Boolean delivery= Boolean.parseBoolean(clean(v[7]));
+                    Boolean prenotazione= Boolean.parseBoolean(clean(v[8]));
+                    String tipoCucina = clean(v[9]);
+                    Double stelle = parseDoubleSafe(clean(v[10]));
+                    String nomeProprietario = clean(v[11]);
+
+                    Ristorante r = new Ristorante(name, nazione, citta, indirizzo,
+                            latitudine, longitudine, prezzoMedio,
+                            delivery, prenotazione, tipoCucina,
+                            stelle, nomeProprietario);
+
+                    elencoRistoranti.add(r);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Errore nel csv: " + e.getMessage());
+            }
+            modificaFileJsonRistoranti(elencoRistoranti);
         }
     }
 
@@ -81,8 +125,8 @@ public class GestoreRistorante {
     public void modificaFileJsonRistoranti(List<Ristorante> modifica) {
         this.elencoRistoranti = modifica;
         try {
-            String contenutoArrayRistorantti = gson.toJson(this.elencoRistoranti);
-            Files.writeString(Path.of(this.percorsoFileMemorizzato), contenutoArrayRistorantti);
+            String contenutoArrayRistoranti = gson.toJson(this.elencoRistoranti);
+            Files.writeString(Path.of(this.percorsoFileMemorizzato), contenutoArrayRistoranti);
         } catch(Exception e) {
             System.err.println("Impossibile caricare dal file Ristoranti");
         }
@@ -100,5 +144,38 @@ public class GestoreRistorante {
 
     public List<Ristorante> getElencoRistoranti() {
         return elencoRistoranti;
+    }
+
+    //Tutti i tipi di cucina presenti(senza duplicati)
+    public List<String> getTipiCucinaLista(){
+        List<String> tipiCucina = new ArrayList<>();
+        for(Ristorante r: elencoRistoranti){
+            if(!tipiCucina.contains(r.getTipoCucina())){
+            tipiCucina.add(r.getTipoCucina());}
+        }
+        return tipiCucina;
+    }
+
+    // Metodo helper per pulire le stringhe: toglie spazi e virgolette agli estremi
+    // Es: "  \"Vienna\" " diventa "Vienna"
+    private static String clean(String input) {
+        if (input == null) return "";
+        input = input.trim();
+        // Se inizia e finisce con virgolette, le togliamo
+        if (input.startsWith("\"") && input.endsWith("\"")) {
+            return input.substring(1, input.length() - 1);
+        }
+        return input;
+    }
+
+    // Metodo helper per convertire i numeri senza crashare se sono vuoti
+    private static double parseDoubleSafe(String input) {
+        if (input == null || input.isEmpty()) return 0.0;
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Attenzione: valore numerico non valido trovato: " + input);
+            return 0.0; // Valore di default in caso di errore
+        }
     }
 }

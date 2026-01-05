@@ -4,6 +4,8 @@ import theknife.eccezioni.ListaVuotaException;
 import theknife.eccezioni.UtenteInesistente;
 //libreria per hashing
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.io.File;
 import java.util.*;
 public class TheKnife {
 
@@ -18,11 +20,11 @@ public class TheKnife {
 
         //creo i gestori, che mi serviranno per gestire tutti i dati
         scanner = new Scanner(System.in);
-        gestoreUtenti= new GestoreUtenti("Utenti.json");
-        gestorePreferiti= new GestorePreferiti("Preferiti.json");
+        gestoreUtenti= new GestoreUtenti("Dati"+ File.separator + "Utenti.json");
+        gestorePreferiti= new GestorePreferiti("Dati"+ File.separator + "Preferiti.json");
         //se è il primo accesso il gestore ristorante metterà il contenuto del csv all'interno del file json
-        gestoreRistorante= new GestoreRistorante("Ristoranti.json");
-        gestoreRecensione= new GestoreRecensione("Recensioni.json");
+        gestoreRistorante= new GestoreRistorante("Dati"+ File.separator + "Ristoranti.json");
+        gestoreRecensione= new GestoreRecensione("Dati"+ File.separator + "Recensioni.json");
 
         //chiamo la pagina home, inizio dell'applicazione
         paginaHome();
@@ -685,7 +687,7 @@ public class TheKnife {
         System.out.print("Longitudine: ");
         double longitudine = doubleInput();
         System.out.print("Prezzo Medio: ");
-        double prezzoMedio = doubleInput();
+        int prezzoMedio = IntInput();
         System.out.print("Delivery (true/false): ");
         boolean delivery = siNoInput();
         System.out.print("Prenotazione (true/false): ");

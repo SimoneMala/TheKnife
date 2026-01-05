@@ -8,7 +8,7 @@ public class Ristorante {
     private String indirizzo;
     private double latitudine;
     private double longitudine;
-    private double prezzoMedio;
+    private int prezzoMedio;
     private Boolean delivery;
     private Boolean prenotazione;
     private String tipoCucina;
@@ -17,7 +17,7 @@ public class Ristorante {
 
     //costruttore
     public Ristorante(String nome, String nazione, String citta, String indirizzo, double latitudine,
-                      double longitudine, double prezzoMedio, boolean delivery, boolean prenotazione, String tipoCucina,
+                      double longitudine, int prezzoMedio, boolean delivery, boolean prenotazione, String tipoCucina,
                       Double stelle, String proprietario){
         this.nome = nome;
         this.nazione = nazione;
@@ -41,7 +41,7 @@ public class Ristorante {
     public String getIndirizzo(){return indirizzo;}
     public double getLatitudine(){return latitudine;}
     public double getLongitudine(){return longitudine;}
-    public double getPrezzoMedio(){return prezzoMedio;}
+    public int getPrezzoMedio(){return prezzoMedio;}
     public Boolean getDelivery(){return delivery;}
     public Boolean getPrenotazione(){return prenotazione;}
     public String getTipoCucina(){return tipoCucina;}
@@ -55,11 +55,11 @@ public class Ristorante {
     public void setIndirizzo(String indirizzo){this.indirizzo = indirizzo;}
     public void setLatitudine(double latitudine) {this.latitudine = latitudine;}
     public void setLongitudine(double longitudine){this.longitudine = longitudine;}
-    public void setPrezzoMedio(double prezzoMedio){this.prezzoMedio = prezzoMedio;}
-    public void setDelivery(boolean delivery) {this.delivery = delivery;}
-    public void setPrenotazione(boolean prenotazione) {this.prenotazione = prenotazione;}
+    public void setPrezzoMedio(int prezzoMedio){this.prezzoMedio = prezzoMedio;}
+    public void setDelivery(Boolean delivery) {this.delivery = delivery;}
+    public void setPrenotazione(Boolean prenotazione) {this.prenotazione = prenotazione;}
     public void setTipoCucina(String tipoCucina){this.tipoCucina = tipoCucina;}
-    public void setStelle(double stelle){this.stelle = stelle;}
+    public void setStelle(Double stelle){this.stelle = stelle;}
     public void setProprietario(String proprietario){this.proprietario = proprietario;}
 
     public String toString(){

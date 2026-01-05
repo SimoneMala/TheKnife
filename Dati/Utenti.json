@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "nome": "",
+    "cognome": "1",
+    "username": "ProvaCliente1",
+    "password": "$2a$10$SdBKJCYbUeTOzdB00smtBOESxtUkxe.fklbb5JdDtm1iAPDa2HzEW",
+    "via": " Via pescepalla",
+    "citta": "Verona",
+    "ruolo": "CLIENTE"
+  }
+]
