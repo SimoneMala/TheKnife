@@ -70,7 +70,7 @@ public class Ristorante {
                 "\nLatitudine: " + latitudine +
                 "\nLongitudine: " + longitudine +
                 "\nPrezzo Medio: " + prezzoMedio +
-                "\nDelivery: " + delivery +
+                "\nDelivery: " + delivery + //mettere si e no se è true o false
                 "\nPrenotazione: " + prenotazione +
                 "\nTipo di Cucina: " + tipoCucina +
                 "\nValutazione in Stelle: " + stelle +

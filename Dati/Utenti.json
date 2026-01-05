@@ -1,11 +1,20 @@
 [
   {
-    "nome": "",
+    "nome": "Cliente1",
     "cognome": "1",
     "username": "ProvaCliente1",
     "password": "$2a$10$SdBKJCYbUeTOzdB00smtBOESxtUkxe.fklbb5JdDtm1iAPDa2HzEW",
-    "via": " Via pescepalla",
-    "citta": "Verona",
+    "via": "Via Mulini Magri 82",
+    "citta": "Busto Arsizio",
     "ruolo": "CLIENTE"
+  },
+  {
+    "nome": "Ristoratore1",
+    "cognome": "1",
+    "username": "ProvaRistoratore1",
+    "password": "$2a$10$DGZYIcn020pjXzgtNqYXf.Vj3fwHNTD0FvLljljkUZpHcE.7LflaW",
+    "via": "Via Bernerdino Luini",
+    "citta": "Lucca",
+    "ruolo": "RISTORATORE"
   }
 ]
