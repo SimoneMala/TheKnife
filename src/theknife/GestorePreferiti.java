@@ -61,16 +61,17 @@ public class GestorePreferiti {
         if (utente==null || ristorante==null){
             throw new NullPointerException("theknife.Utente o ristorante non corretti");
         }
-        if (this.ristorantiPreferiti.isEmpty()){
+        if (ristorantiPreferiti.isEmpty()){
             throw new ListaVuotaException("La lista preferiti è già vuota");
         }
         Preferito p= new Preferito(utente.getUsername(), ristorante.getNome());
-        for(Preferito p1: this.ristorantiPreferiti){
+        for(Preferito p1: ristorantiPreferiti){
             if(p1.equals(p)){
-                this.ristorantiPreferiti.remove(p);
+                ristorantiPreferiti.remove(p);
+                break;
             }
         }
-        ModificaFileJsonPreferiti(this.ristorantiPreferiti);
+        ModificaFileJsonPreferiti(ristorantiPreferiti);
     }
 
     //restituisce la lista di preferiti per l'utente, per visualizzare la lista nel main la stampo

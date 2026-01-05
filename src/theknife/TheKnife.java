@@ -90,7 +90,7 @@ public class TheKnife {
             successo= false;
         }
         if(successo){
-            System.out.println("Login eseguito con successo! \nBenvenuto:" + utente);
+            System.out.println("Login eseguito con successo! \nBenvenuto:" + utente.getUsername());
         }else{
             System.out.println("Il login non è andato a buon fine, siamo spiacenti");
             return;
@@ -109,7 +109,6 @@ public class TheKnife {
         System.out.println("\nRegistrazione");
         System.out.println("Inserire le informazioni necessarie alla registrazione:");
         System.out.println("Nome:");
-        scanner.nextLine();
         String nome= StringInput();
         System.out.println("Cognome:");
         String cognome= StringInput();
@@ -178,7 +177,7 @@ public class TheKnife {
         //scelta dell'operazione
         while (true){
             System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
-            int op= scanner.nextInt();
+            int op= IntInput();
 
             switch (op){
                 case 1:
@@ -232,16 +231,16 @@ public class TheKnife {
             int count=1;
             for(Recensione r: recensioniRistorante){
                 if(r.getRispostaRecensione()!=null) {
-                    System.out.println(count++ + r.getTesto() + r.getStelle() + r.getRispostaRecensione());
+                    System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle() + "\nRisposta" + r.getRispostaRecensione());
                 }else{
-                    System.out.println(count++ + r.getTesto() + r.getStelle());
+                    System.out.println(count++ +"\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle());
                 }
             }
         }
     }
 
     public static Ristorante dettagliRistorante(List<String[]> ristoranti){
-        System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti?");
+        System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti (Digita 1 o 2)?");
         System.out.println("1: Sì \n2: No");
         int scelta= IntInput();
         if(scelta==1){
@@ -295,18 +294,24 @@ public class TheKnife {
             citta= StringInput();
         }
         if(filtroCucina){
-            System.out.println("Inserisci la tipologia di cucina:");
+            System.out.println("Scegli la tipologia di cucina tra quelle presenti:");
             //stampo le tipologie presenti
-            System.out.println("");
+            ArrayList<String> tipiCucina= (ArrayList<String>) gestoreRistorante.getTipiCucinaLista();
+            for(String tipo: tipiCucina){
+                System.out.println(tipo);
+            }
             tipologiaCucina= StringInput();
-            //if-else per dare poi valore corretto
+            while(!tipiCucina.contains(tipologiaCucina)){
+              System.out.println("Hai scritto in maniera errata la tipologia, riprova (stai attento a maiuscole e spazi)!");
+              tipologiaCucina= StringInput();
+            }
         }
         if(filtroMinimo){
-            System.out.println("Inserisci la prezzo minimo:");
+            System.out.println("Inserisci il prezzo minimo:");
             prezzoMinimo= doubleInput();
         }
         if(filtroMassimo){
-            System.out.println("Inserisci la prezzo massimo:");
+            System.out.println("Inserisci il prezzo massimo:");
             prezzoMassimo= doubleInput();
         }
         if(filtroDelivery){
@@ -314,7 +319,7 @@ public class TheKnife {
             delivery= siNoInput();
         }
         if(filtroPrenotazione){
-            System.out.println("Inserisci si o no se vuoi che prenotazione sia disponibile:");
+            System.out.println("Inserisci si o no se vuoi che la prenotazione online sia disponibile:");
             prenotazione= siNoInput();
         }
         if(filtroStelle){
@@ -330,7 +335,7 @@ public class TheKnife {
         int numero= 1;
         List<String[]> matriceRistoranti= new ArrayList<>();
         for (Ristorante ris : ristoranti) {
-            System.out.println(numero++ + ris.getNome() + ris.getCitta());
+            System.out.println(numero++ + " " + ris.getNome() + " " + ris.getCitta());
             //creo la mia riga che contiene nome e città (indice 0 = numero 1 stampato)
             String[] riga= new String[2];
             riga[0]= ris.getNome();

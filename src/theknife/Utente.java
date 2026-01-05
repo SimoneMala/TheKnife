@@ -74,4 +74,12 @@ public class Utente {
         return "Utente: "+ username + " " + password;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(this==o) return true;
+        if(o==null || getClass() != o.getClass()) return false;
+        Utente that = (Utente) o;
+        return that.getUsername().equals(this.getUsername());
+    }
+
 }
