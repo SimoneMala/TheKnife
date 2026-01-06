@@ -410,7 +410,8 @@ public class TheKnife {
             System.out.println("6. Visualizza i tuoi ristoranti preferiti");
             System.out.println("0. Torna alla home");
 
-            scelta = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", false));
+            System.out.println("Seleziona un'opzione:");
+            scelta = IntInput();
 
             switch (scelta) {
                 //visualizzazione i dati utente
@@ -490,7 +491,10 @@ public class TheKnife {
                         }
                         System.out.println("Modifica o elimina le tue recensioni: premere 1 per modificare, 2 per eliminare, 0 per uscire.");
                         int sceltaOperazione = IntInput();
-                        while (sceltaOperazione != 0 || sceltaOperazione != 1 || sceltaOperazione != 2) {
+
+
+                        while (sceltaOperazione != 0 && sceltaOperazione != 1 && sceltaOperazione != 2) {
+                            System.out.println("Scelta non valida:");
                             sceltaOperazione = IntInput();
                         }
                         System.out.println("Scegli su quale recensione fare l'operazione (inserisci il numero della recensione):");
@@ -566,7 +570,8 @@ public class TheKnife {
                         " \n3. Rimuovi il ristorante dai preferiti" +
                         " \n4. Visualizza tutte le recensioni lasciate al ristorante \n5. Esci dalla visualizzazione");
 
-                sceltaInterna = Integer.parseInt(gestisciInput("Inserisci la tua scelta: ", false));
+                System.out.println("Operazione scelta:");
+                sceltaInterna = IntInput();
 
                 switch (sceltaInterna) {
 
