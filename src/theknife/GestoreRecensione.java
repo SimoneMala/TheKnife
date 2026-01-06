@@ -30,7 +30,7 @@ public class GestoreRecensione {
                 this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
                 }.getType());
             } catch (Exception e) {
-                System.err.println("Impossibile caricare dal file recensioni");
+                System.out.println("Impossibile caricare dal file recensioni");
             }
         }else{
             //creazione lista vuota se file non esiste o è vuoto
@@ -52,19 +52,18 @@ public class GestoreRecensione {
             String json = gson.toJson(recensioni);
             Files.writeString(Path.of(percorsoFileMemorizzato), json);
         } catch (Exception e) {
-            System.err.println("Errore nel salvataggio recensioni");
+            System.out.println("Errore nel salvataggio recensioni");
         }
     }
 
 
     //mostra recensioni del theknife.Ristorante
-    public List<Recensione> visualizzaRecensioni(Ristorante ris) {
+    public List<Recensione> visualizzaRecensioni(Ristorante ris) throws IllegalArgumentException {
 
         if (recensioni.isEmpty()) {
             throw new IllegalArgumentException("la lista è vuota");
         }
 
-        //creo una lista in cui inserire le recensioni del ristorante scelto
         List<Recensione> recensioniRistorante = new ArrayList<>();
 
         boolean trovato = false;
@@ -83,7 +82,7 @@ public class GestoreRecensione {
     }
 
     //inserisce risposta alla recensione
-    public void rispondiRecensione(Recensione rec, String risposta) {
+    public void rispondiRecensione(Recensione rec, String risposta) throws IllegalArgumentException {
         for (Recensione tmp : recensioni) {
             if (tmp.equals(rec)) {
                 rec = tmp;
@@ -106,7 +105,7 @@ public class GestoreRecensione {
     }
 
     //modifica recensione esistente
-    public void modificaRecensione(Recensione rec, String testoMod, int stelleMod, Utente utente) {
+    public void modificaRecensione(Recensione rec, String testoMod, int stelleMod, Utente utente) throws IllegalArgumentException {
         for (Recensione tmp : recensioni) {
             if (tmp.equals(rec) && utente.getUsername().equals(tmp.getUsername())) {
                 //modifica il testo solo se inserito qualcosa di diverso da vuoto o spazi
@@ -125,7 +124,7 @@ public class GestoreRecensione {
     }
 
     //elimina recensione
-    public void eliminaRecensione(Recensione rec) {
+    public void eliminaRecensione(Recensione rec) throws IllegalArgumentException {
         if (!recensioni.remove(rec)) {
             throw new IllegalArgumentException("Recensione non trovata");
         }
@@ -133,7 +132,7 @@ public class GestoreRecensione {
     }
 
     //riepilogo recensioni ristorante
-    public void visualizzaRiepilogo(Ristorante ris) {
+    public void visualizzaRiepilogo(Ristorante ris) throws IllegalArgumentException {
         int sommaStelle = 0;
         int cont = 0;
         for (Recensione rec : recensioni) {
@@ -147,12 +146,15 @@ public class GestoreRecensione {
             throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         } else {
             double media = (double) sommaStelle / cont;
-            System.out.println("Numero di recensioni:" + cont);
-            System.out.println("valutazione media:" + media);
+            System.out.println("Numero di recensioni: " + cont);
+            System.out.println("valutazione media: " + media);
         }
     }
 
-    public List<Recensione> visualizzaRecensioniperUtente (Utente u) {
+    public List<Recensione> visualizzaRecensioniperUtente (Utente u) throws IllegalArgumentException {
+        if (recensioni.isEmpty()) {
+            throw new IllegalArgumentException("la lista è vuota");
+        }
         List<Recensione> recensioniUtente = new ArrayList<>();
         for (Recensione rec : recensioni) {
             if (rec.getUsername().equals(u.getUsername())){
@@ -165,7 +167,10 @@ public class GestoreRecensione {
         return recensioniUtente;
     }
 
-    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) {
+    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) throws IllegalArgumentException {
+        if (recensioni.isEmpty()) {
+            throw new IllegalArgumentException("la lista è vuota");
+        }
         List<Recensione> recensioniPerRistoratore = new ArrayList<>();
         for(Recensione rec : recensioni){
             if(ris.getNome().equals(rec.getNomeRistorante())){
