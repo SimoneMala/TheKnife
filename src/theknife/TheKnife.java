@@ -83,10 +83,10 @@ public class TheKnife {
         try {
             utente = gestoreUtenti.login(username, password);
         } catch (NullPointerException e){
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
             successo= false;
         } catch (UtenteInesistente e) {
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
             successo= false;
         }
         if(successo){
@@ -158,7 +158,7 @@ public class TheKnife {
         try {
             gestoreUtenti.registrazioneUtente(u);
         }catch (NullPointerException e){
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
             successo= false;
         }
         //pagina login automatica dopo la registrazione
@@ -199,7 +199,7 @@ public class TheKnife {
                             }
                         }
                     }catch(ListaVuotaException e){
-                        System.err.println(e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                     break;
                 //cerca ristoranti
