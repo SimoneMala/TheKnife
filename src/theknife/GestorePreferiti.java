@@ -1,6 +1,7 @@
 package theknife;
 
 import com.google.gson.GsonBuilder;
+import theknife.eccezioni.IllegalArgumentException;
 import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
 
@@ -45,14 +46,18 @@ public class GestorePreferiti {
 
     //metodo che aggiunge un ristorante alla lista di preferiti inerente a un utente
     //nel main controllo che utente e ristorante esistono
-    public void aggiungiPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException{
+    public void aggiungiPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException, IllegalArgumentException {
         if (utente==null || ristorante==null){
-            throw new NullPointerException("theknife.Utente o ristorante non corretti");
+            throw new NullPointerException("Utente o ristorante non corretti");
+        }
+        //controllo che non sia già presente
+        for(Preferito p: ristorantiPreferiti){
+            if(p.getUsername().equals(utente.getUsername()) && p.getNomeRist().equals(ristorante.getNome())){
+                throw new IllegalArgumentException("Questo ristorante fa già parte dei tuoi ristoranti preferiti!");
+            }
         }
         Preferito p= new Preferito(utente.getUsername(), ristorante.getNome());
-
         this.ristorantiPreferiti.add(p);
-
         ModificaFileJsonPreferiti(this.ristorantiPreferiti);
     }
 
