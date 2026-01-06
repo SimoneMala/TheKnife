@@ -132,10 +132,9 @@ public class TheKnife {
         String password= StringInput();
         //hash della password, sarà quella inserita all'interno dell'utente
         String hashPw = BCrypt.hashpw(password, BCrypt.gensalt());
-        System.out.println("Domicilio:");
-        System.out.println("Inserire la via:");
+        System.out.println("Via:");
         String via= StringInput();
-        System.out.println("Inserire la città:");
+        System.out.println("Città:");
         String citta= StringInput();
         System.out.println("Ruolo: selezionare 1 per Ristoratore, 2 per Cliente");
         boolean ruoloCorretto= true;
@@ -192,7 +191,6 @@ public class TheKnife {
                                 (null, luogo, null, null, false, false, null);
                         if(!ristorantiVicini.isEmpty()){
                             System.out.println("Ecco i ristoranti che si trovano vicino a te:");
-                            int numero= 1;
                             //creo matrice che contiene tutti i ristoranti (nome =0, città= 1) che verrà passata al metodo
                             List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiVicini);
                             Ristorante visto=dettagliRistorante(ristorantiTrovati);
@@ -206,12 +204,15 @@ public class TheKnife {
                     break;
                 //cerca ristoranti
                 case 4:
-                    ArrayList<Ristorante> ristorantiCercati= (ArrayList<Ristorante>) ricercaConFiltri();
-                    List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiCercati);
-                    Ristorante visto=dettagliRistorante(ristorantiTrovati);
-                    if (visto!=null){
-                        recensioniAnonime(visto);
-                    }
+                        ArrayList<Ristorante> ristorantiCercati = (ArrayList<Ristorante>) ricercaConFiltri();
+                        if(ristorantiCercati!=null){
+                            List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
+                            Ristorante visto = dettagliRistorante(ristorantiTrovati);
+                            if (visto != null) {
+                                recensioniAnonime(visto);
+                            }
+                        }
+
                     break;
                 case 0:
                     return;
@@ -226,15 +227,19 @@ public class TheKnife {
         boolean scelta= siNoInput();
         ArrayList<Recensione> recensioniRistorante;
         if(scelta){
-            System.out.println("Recensioni per il ristorante " + ristorante.getNome());
-            recensioniRistorante= (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioni(ristorante);
-            int count=1;
-            for(Recensione r: recensioniRistorante){
-                if(r.getRispostaRecensione()!=null) {
-                    System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle() + "\nRisposta" + r.getRispostaRecensione());
-                }else{
-                    System.out.println(count++ +"\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle());
+            try {
+                System.out.println("Recensioni per il ristorante " + ristorante.getNome());
+                recensioniRistorante = (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioni(ristorante);
+                int count = 1;
+                for (Recensione r : recensioniRistorante) {
+                    if (r.getRispostaRecensione() != null) {
+                        System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle() + "\nRisposta" + r.getRispostaRecensione());
+                    } else {
+                        System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle());
+                    }
                 }
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -242,93 +247,95 @@ public class TheKnife {
     public static Ristorante dettagliRistorante(List<String[]> ristoranti){
         System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti (Digita 1 o 2)?");
         System.out.println("1: Sì \n2: No");
-        int scelta= IntInput();
-        if(scelta==1){
-            int max= ristoranti.size();
-            System.out.println("Digita il numero che si riferisce al ristorante di cui vuoi informazioni:");
-            boolean corretto= true;
-            int ristoranteScelto;
-            do {
-                ristoranteScelto = IntInput();
-                if (ristoranteScelto > max) {
-                    System.out.println("Il numero scelto non corrisponde a un ristorante, controlla la lista di ristoranti e riprova:");
-                    corretto= false;
-                }else{
-                    corretto= true;
-                }
-            }while(!corretto);
+        do {
+            int scelta = IntInput();
+            switch (scelta) {
+                case 1:
+                    int max = ristoranti.size();
+                    System.out.println("Digita il numero che si riferisce al ristorante di cui vuoi informazioni:");
+                    boolean corretto = true;
+                    int ristoranteScelto;
+                    do {
+                        ristoranteScelto = IntInput();
+                        if (ristoranteScelto > max) {
+                            System.out.println("Il numero scelto non corrisponde a un ristorante, controlla la lista di ristoranti e riprova:");
+                            corretto = false;
+                        } else {
+                            corretto = true;
+                        }
+                    } while (!corretto);
 
-            //recupero nome e città ristorante
-            String[] riga= ristoranti.get(ristoranteScelto-1);
-            Ristorante scelto=gestoreRistorante.visualizzaRistorante(riga[0], riga[1]);
-            //bisogna ancora aggiungere il toString di ristoranti
-            System.out.println(scelto.toString());
-            return scelto;
-        }else{
-            return null;
-        }
+                    try {
+                        //recupero nome e città ristorante
+                        String[] riga = ristoranti.get(ristoranteScelto - 1);
+                        Ristorante scelto = gestoreRistorante.visualizzaRistorante(riga[0], riga[1]);
+                        //bisogna ancora aggiungere il toString di ristoranti
+                        System.out.println(scelto.toString());
+                        return scelto;
+                    }catch(NullPointerException e){
+                        System.out.println(e.getMessage());
+                    }
+                case 2:
+                    return null;
+                default:
+                    System.out.println("Il numero inserito non corrisponde a nessuna scelta, riprova");
+
+            }
+        }while(true);
     }
 
     public static List<Ristorante> ricercaConFiltri(){
-        String citta= null, tipologiaCucina= null;
-        Double prezzoMassimo= null, prezzoMinimo= null, stelleMinimo= null;
-        Boolean delivery= null, prenotazione= null;
-        System.out.println("\nScegli i filtri che vuoi mettere! Rispondi con si o no");
-        System.out.println("Filtro città:");
-        boolean filtroCitta= siNoInput();
-        System.out.println("Filtro tipo cucina:");
-        boolean filtroCucina= siNoInput();
-        System.out.println("Filtro prezzo minimo:");
-        boolean filtroMinimo= siNoInput();
-        System.out.println("Filtro prezzo massimo:");
-        boolean filtroMassimo= siNoInput();
-        System.out.println("Filtro delivery:");
-        boolean filtroDelivery= siNoInput();
-        System.out.println("Filtro prenotazione:");
-        boolean filtroPrenotazione= siNoInput();
-        System.out.println("Filtro stelle:");
-        boolean filtroStelle= siNoInput();
-        //con if ora gli faccio aggiungere i filtri veri e propri
-        if(filtroCitta){
-            System.out.println("Inserisci la città:");
-            citta= StringInput();
-        }
-        if(filtroCucina){
-            System.out.println("Scegli la tipologia di cucina tra quelle presenti:");
-            //stampo le tipologie presenti
-            ArrayList<String> tipiCucina= (ArrayList<String>) gestoreRistorante.getTipiCucinaLista();
-            for(String tipo: tipiCucina){
-                System.out.println(tipo);
-            }
-            tipologiaCucina= StringInput();
-            while(!tipiCucina.contains(tipologiaCucina)){
-              System.out.println("Hai scritto in maniera errata la tipologia, riprova (stai attento a maiuscole e spazi)!");
-              tipologiaCucina= StringInput();
+        System.out.println("Inserisci i filtri che vuoi aggiungere, se non vuoi aggiungerli premi invio");
+        System.out.println("Filtro citta (obbligatorio, non puoi lasciarlo vuoto):");
+        boolean cittaGiusto = false;
+        String citta="";
+        while(!cittaGiusto) {
+            citta= scanner.nextLine();
+            if(!citta.isEmpty()){
+                cittaGiusto = true;
+            }else{
+                System.out.println("La citta è obbligatoria, non puoi lasciarla vuota!");
             }
         }
-        if(filtroMinimo){
-            System.out.println("Inserisci il prezzo minimo:");
-            prezzoMinimo= doubleInput();
+        System.out.println("Filtro tipo cucina (inserisci il nome del tipo cucina che vuoi)");
+        String tipologiaCucina= scanner.nextLine();
+        boolean continua=true;
+        while(continua) {
+            if (tipologiaCucina.isEmpty()){
+                continua=false;
+            }else {
+                ArrayList<String> tipiCucina = (ArrayList<String>) gestoreRistorante.getTipiCucinaLista();
+                if (!tipiCucina.contains(tipologiaCucina)) {
+                    System.out.println("La tipologia scritta non è presente tra i ristoranti, vuoi provare a inserirne un altra?");
+                    boolean scelta = siNoInput();
+                    if (scelta) {
+                        System.out.println("Prova a inserirla in inglese! Altrimenti inseriscine un altra:");
+                        tipologiaCucina = StringInput();
+                    } else {
+                        continua = false;
+                    }
+                }
+            }
         }
-        if(filtroMassimo){
-            System.out.println("Inserisci il prezzo massimo:");
-            prezzoMassimo= doubleInput();
+        System.out.println("Filtro prezzo massimo (inserisci un numero):");
+        Double prezzoMassimo= doubleInputOrNull();
+        System.out.println("Filtro prezzo minimo (inserisci un numero):");
+        Double prezzoMinimo= doubleInputOrNull();
+        System.out.println("Filtro stelle (inserisci il numero minimo di stelle che il ristorante deve avere)");
+        Double stelleMinimo= doubleInputOrNull();
+        System.out.println("Filtro delivery (inserisci si o no se vuoi che sia presente o meno il servizio):");
+        Boolean delivery= booleanInputOrNull();
+        System.out.println("Filtro prenotazione online (inserisci si o no se vuoi che sia presente o meno il servizio)");
+        Boolean prenotazione= booleanInputOrNull();
+        if(tipologiaCucina.equals("")){
+            tipologiaCucina=null;
         }
-        if(filtroDelivery){
-            System.out.println("Inserisci si o no se vuoi che delivery sia disponibile:");
-            delivery= siNoInput();
+        try {
+            return gestoreRistorante.cercaRistoranti(tipologiaCucina, citta, prezzoMinimo, prezzoMassimo, delivery, prenotazione, stelleMinimo);
+        }catch(ListaVuotaException e){
+            System.out.println(e.getMessage());
         }
-        if(filtroPrenotazione){
-            System.out.println("Inserisci si o no se vuoi che la prenotazione online sia disponibile:");
-            prenotazione= siNoInput();
-        }
-        if(filtroStelle){
-            System.out.println("Inserisci il numero di stelle minimo che vuoi nel ristorante:");
-            stelleMinimo= doubleInput();
-        }
-        List<Ristorante> ristorantiCercati= gestoreRistorante.cercaRistoranti(tipologiaCucina, citta, prezzoMinimo, prezzoMassimo, delivery, prenotazione, stelleMinimo);
-        return ristorantiCercati;
-
+        return null;
     }
 
     public static List<String[]> stampaRistoranti(List<Ristorante> ristoranti){
@@ -347,16 +354,17 @@ public class TheKnife {
     //metodi di controllo dell'input
     //controllo che sia una stringa
     public static String StringInput(){
-        while (!scanner.hasNextLine()) {
-            System.out.println("Input non valido, inserire una stringa!");
-            scanner.nextLine();
+        String input= scanner.nextLine();
+        while (input.isEmpty()) {
+            System.out.println("Input non valido, non puoi andare a capo lasciando vuoto!");
+            input=scanner.nextLine();
         }
-        return scanner.nextLine();
+        return input;
     }
     //controllo che sia un intero
     public static int IntInput(){
         while(!scanner.hasNextInt()) {
-            System.out.println("Input non valido, inserire un numero senza virgola!");
+            System.out.println("Input non valido \nInserire un numero senza virgola!");
             scanner.next();
         }
         int numero= scanner.nextInt();
@@ -366,18 +374,64 @@ public class TheKnife {
 
     public static double doubleInput(){
         while (!scanner.hasNextDouble()) {
-            System.out.println("Input non valido, inserire un numero!");
+            System.out.println("Input non valido \nInserire un numero!");
             scanner.next();
         }
         double numero= scanner.nextDouble();
         scanner.nextLine();
         return numero;
     }
+    //metodo che richiede input double ma che può andare a capo=null
+    public static Double doubleInputOrNull(){
+        while (true){
+            String input= scanner.nextLine().trim();
+            if(input.isEmpty()){
+                return null;
+            }
+            try{
+                return Double.parseDouble(input);
+            }catch(NumberFormatException e){
+                System.out.println("Input non valido \nInserire un numero (es. 3.5) oppure premere invio per saltare!");
+            }
+        }
+    }
+
+    //metodo che richiede input int ma che se vai a capo=null
+    public static Integer intInputOrNull(){
+        while (true){
+            String input= scanner.nextLine().trim();
+            if(input.isEmpty()){
+                return null;
+            }
+            try{
+                return Integer.parseInt(input);
+            }catch(NumberFormatException e){
+                System.out.println("Input non valido, inserire un numero senza virgola oppure premere invio per saltare!");
+            }
+        }
+    }
+
+    public static Boolean booleanInputOrNull(){
+        while (true){
+            String input= scanner.nextLine().trim();
+            if(input.isEmpty()){
+                return null;
+            }
+            if(input.equalsIgnoreCase("si") || input.equalsIgnoreCase("sì")){
+                return true;
+            }else if(input.equalsIgnoreCase("no")){
+                return false;
+            }else{
+                System.out.println("Input non valido \nInserire si o no oppure premere invio per saltare!");
+            }
+
+        }
+    }
     //controllo che sia o si o no e restituisco true se si, false se no
     public static boolean siNoInput(){
         do{
-            String scelta= StringInput();
-            if (scelta.equalsIgnoreCase("si")){
+            String scelta= scanner.nextLine();
+            if (scelta.equalsIgnoreCase("si") || scelta.equalsIgnoreCase("sì")){
                 return true;
             }else if (scelta.equalsIgnoreCase("no")){
                 return false;
@@ -472,12 +526,13 @@ public class TheKnife {
                 //ricerca ristoranti con filtri
                 case 4:
                     ArrayList<Ristorante> ristorantiCercati = (ArrayList<Ristorante>) ricercaConFiltri();
-                    List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
-                    Ristorante visto = dettagliRistorante(ristorantiTrovati);
-                    if (visto != null) {
-                        ulterioriInformazioni(u, visto);
+                    if(ristorantiCercati!=null){
+                        List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
+                        Ristorante visto = dettagliRistorante(ristorantiTrovati);
+                        if (visto != null) {
+                            ulterioriInformazioni(u, visto);
+                        }
                     }
-
                     break;
 
                 //visualizza recensioni
