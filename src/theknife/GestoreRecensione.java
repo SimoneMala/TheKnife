@@ -27,7 +27,7 @@ public class GestoreRecensione {
                 //leggo contenuto del file e lo inserisco tutto in una string, poi inserisco il contenuto in una lista
                 String contenutoJson = Files.readString(Path.of(nomeFileJson));
 
-                this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>() {
+                this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
                 }.getType());
             } catch (Exception e) {
                 System.err.println("Impossibile caricare dal file recensioni");
@@ -165,7 +165,7 @@ public class GestoreRecensione {
         return recensioniUtente;
     }
 
-    public List<Recensione> visualizzaRecensioniPerRistoratore (Ristorante ris, Utente ristoratore) {
+    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) {
         List<Recensione> recensioniPerRistoratore = new ArrayList<>();
         for(Recensione rec : recensioni){
             if(ris.getNome().equals(rec.getNomeRistorante())){
