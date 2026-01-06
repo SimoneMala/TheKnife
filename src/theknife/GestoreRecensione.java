@@ -30,7 +30,7 @@ public class GestoreRecensione {
                 this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
                 }.getType());
             } catch (Exception e) {
-                System.err.println("Impossibile caricare dal file recensioni");
+                System.out.println("Impossibile caricare dal file recensioni");
             }
         }else{
             //creazione lista vuota se file non esiste o è vuoto
@@ -52,7 +52,7 @@ public class GestoreRecensione {
             String json = gson.toJson(recensioni);
             Files.writeString(Path.of(percorsoFileMemorizzato), json);
         } catch (Exception e) {
-            System.err.println("Errore nel salvataggio recensioni");
+            System.out.println("Errore nel salvataggio recensioni");
         }
     }
 
@@ -146,8 +146,8 @@ public class GestoreRecensione {
             throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         } else {
             double media = (double) sommaStelle / cont;
-            System.out.println("Numero di recensioni:" + cont);
-            System.out.println("valutazione media:" + media);
+            System.out.println("Numero di recensioni: " + cont);
+            System.out.println("valutazione media: " + media);
         }
     }
 

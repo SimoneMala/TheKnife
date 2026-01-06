@@ -520,7 +520,7 @@ public class TheKnife {
 
                         }
                     } catch (ListaVuotaException e) {
-                        System.err.println("Non ci sono ristoranti vicino a te.");
+                        System.out.println("Non ci sono ristoranti vicino a te.");
                     }
                     break;
 
@@ -574,7 +574,7 @@ public class TheKnife {
                             System.out.println("Selezione non valida.");
                         }
                     } catch (IllegalArgumentException e) {
-                        System.err.println("Non hai recensioni.");
+                        System.out.println("Non hai recensioni.");
                     }
                     break;
 
@@ -586,7 +586,7 @@ public class TheKnife {
                             ulterioriInformazioni(u, scelto);
                         }
                     } catch (ListaVuotaException e) {
-                        System.err.println("Non hai ristoranti preferiti.");
+                        System.out.println("Non hai ristoranti preferiti.");
                     }
                     break;
                 //uscita
@@ -645,29 +645,36 @@ public class TheKnife {
                         try {
                             gestorePreferiti.aggiungiPreferiti(u, visto);
                             System.out.println("Ristorante inserito con successo!");
-                            break;
 
                         } catch (NullPointerException e) {
-                            System.err.println("Errore: Impossibile aggiungere ai preferiti. Dati mancanti (Null).");
-                        } catch (Exception e) {
-                            System.err.println("Errore durante l'inserimento: il ristorante fa già parte dei preferiti!");
+                            System.out.println(e.getMessage());
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
                         }
+                        break;
 
                     case 3:
-                        System.out.println("Rimozione del ristorante avvenuta con successo!");
-                        gestorePreferiti.cancellaPreferiti(u, visto);
+                        try {
+                            gestorePreferiti.cancellaPreferiti(u, visto);
+                            System.out.println("Ristorante rimosso con successo!");
+                        } catch (NullPointerException e) {
+                            System.out.println(e.getMessage());
+                        } catch (ListaVuotaException e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
 
                     //visualizza riepilogo recensioni ristorante
                     case 4:
-                        System.out.println("Ecco le recensioni del ristorante:");
-                        List<Recensione> recs = gestoreRecensione.visualizzaRecensioni(visto);
-                        if (recs.isEmpty()) {
-                            System.out.println("Non ci sono recensioni per questo ristorante.");
-                            break;
-                        }
+                        try {
+                            System.out.println("Ecco le recensioni del ristorante:");
+                            List<Recensione> recs = gestoreRecensione.visualizzaRecensioni(visto);
+
                         for (Recensione r : recs) {
                             System.out.println(r + " ");
+                            }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
                         }
                         break;
 
