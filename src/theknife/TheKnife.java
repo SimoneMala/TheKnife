@@ -814,11 +814,11 @@ public class TheKnife {
 
     public static Ristorante datiRistorante(Utente ristoratoreLoggato, String nomeControllato) {
         System.out.print("Nazione: ");
-        String nazione = scanner.nextLine();
+        String nazione = StringInput();
         System.out.print("Città: ");
-        String citta = scanner.nextLine();
+        String citta = StringInput();
         System.out.print("Indirizzo: ");
-        String indirizzo = scanner.nextLine();
+        String indirizzo = StringInput();
         System.out.print("Latitudine: ");
         double latitudine = doubleInput();
         System.out.print("Longitudine: ");
@@ -831,7 +831,7 @@ public class TheKnife {
         boolean prenotazione = siNoInput();
         scanner.nextLine(); // Consumare la nuova linea rimasta
         System.out.print("Tipo di Cucina: ");
-        String tipoCucina = scanner.nextLine();
+        String tipoCucina = StringInput();
         Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
         String nomeProprietario = ristoratoreLoggato.getNome();
         return new Ristorante(nomeControllato, nazione, citta, indirizzo, latitudine, longitudine, prezzoMedio,
