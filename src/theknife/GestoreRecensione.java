@@ -64,7 +64,6 @@ public class GestoreRecensione {
             throw new IllegalArgumentException("la lista è vuota");
         }
 
-        //creo una lista in cui inserire le recensioni del ristorante scelto
         List<Recensione> recensioniRistorante = new ArrayList<>();
 
         boolean trovato = false;
@@ -153,6 +152,9 @@ public class GestoreRecensione {
     }
 
     public List<Recensione> visualizzaRecensioniperUtente (Utente u) throws IllegalArgumentException {
+        if (recensioni.isEmpty()) {
+            throw new IllegalArgumentException("la lista è vuota");
+        }
         List<Recensione> recensioniUtente = new ArrayList<>();
         for (Recensione rec : recensioni) {
             if (rec.getUsername().equals(u.getUsername())){
@@ -165,7 +167,10 @@ public class GestoreRecensione {
         return recensioniUtente;
     }
 
-    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) {
+    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) throws IllegalArgumentException {
+        if (recensioni.isEmpty()) {
+            throw new IllegalArgumentException("la lista è vuota");
+        }
         List<Recensione> recensioniPerRistoratore = new ArrayList<>();
         for(Recensione rec : recensioni){
             if(ris.getNome().equals(rec.getNomeRistorante())){

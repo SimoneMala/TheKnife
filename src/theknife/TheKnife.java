@@ -542,45 +542,41 @@ public class TheKnife {
                         List<Recensione> recensioniUtente = gestoreRecensione.visualizzaRecensioniperUtente(u);
                         int cont = 1;
                         for (Recensione rec : recensioniUtente) {
-                            System.out.println(cont++ + rec.toString());
+                            System.out.println(cont++ + ") " + rec.toString());
                         }
-                        System.out.println("Modifica o elimina le tue recensioni: premere 1 per modificare, 2 per eliminare, 0 per uscire.");
+
+                        System.out.println("1 per modificare, 2 per eliminare, 0 per uscire:");
                         int sceltaOperazione = IntInput();
+                        if (sceltaOperazione == 0) break;
 
-
-                        while (sceltaOperazione != 0 && sceltaOperazione != 1 && sceltaOperazione != 2) {
-                            System.out.println("Scelta non valida:");
-                            sceltaOperazione = IntInput();
-                        }
-                        System.out.println("Scegli su quale recensione fare l'operazione (inserisci il numero della recensione):");
+                        System.out.println("Scegli il numero della recensione:");
                         int sceltaRecensione = IntInput();
-                        int contatore = 1;
-                        Recensione recensione = null;
-                        for (Recensione rec : recensioniUtente) {
-                            if (sceltaRecensione == contatore) {
-                                recensione = rec;
-                            }
-                            contatore++;
-                        }
 
-                        if (sceltaOperazione == 1) {
-                            System.out.println("Inserisci il testo modificato della recensione (PREMERE INVIO PER NON MODIFICARE):");
-                            String testoModificato = scanner.nextLine();
-                            System.out.println("Inserisci il numero di stelle modificato (PREMERE INVIO PER NON MODIFICARE):");
-                            int stelleModificate = scanner.nextInt();
-                            gestoreRecensione.modificaRecensione(recensione, testoModificato, stelleModificate, u);
-                            System.out.println("Recensione modificata con successo.");
-                        } else if (sceltaOperazione == 2) {
-                            gestoreRecensione.eliminaRecensione(recensione);
-                            System.out.println("Recensione rimossa con successo.");
-                        } else if (sceltaOperazione == 0) {
-                            System.out.println("Uscita dalla gestione delle recensioni.");
+
+                        if (sceltaRecensione > 0 && sceltaRecensione <= recensioniUtente.size()) {
+                            Recensione recensioneSelezionata = recensioniUtente.get(sceltaRecensione - 1);
+
+                            if (sceltaOperazione == 1) {
+                                System.out.println("Nuovo testo (Invio per non modificare):");
+                                String testoModificato = scanner.nextLine();
+
+                                System.out.println("Nuove stelle (es. 1-5):");
+                                String stelleInput = scanner.nextLine();
+                                int stelleModificate = stelleInput.isEmpty() ? recensioneSelezionata.getStelle() : Integer.parseInt(stelleInput);
+
+                                gestoreRecensione.modificaRecensione(recensioneSelezionata, testoModificato, stelleModificate, u);
+                                System.out.println("Modificata!");
+                            } else if (sceltaOperazione == 2) {
+                                gestoreRecensione.eliminaRecensione(recensioneSelezionata);
+                                System.out.println("Eliminata!");
+                            }
+                        } else {
+                            System.out.println("Selezione non valida.");
                         }
                     } catch (IllegalArgumentException e) {
-                        System.err.println("Non hai recensioni lasciate.");
-
+                        System.err.println("Non hai recensioni.");
                     }
-                        break;
+                    break;
 
                 case 6:
                     try {
@@ -646,11 +642,17 @@ public class TheKnife {
 
                     //aggiungi ai preferiti
                     case 2:
-                        gestorePreferiti.aggiungiPreferiti(u, visto);
-                        System.out.println("Ristorante inserito con successo!");
-                        break;
+                        try {
+                            gestorePreferiti.aggiungiPreferiti(u, visto);
+                            System.out.println("Ristorante inserito con successo!");
+                            break;
 
-                    //rimozione dai preferiti
+                        } catch (NullPointerException e) {
+                            System.err.println("Errore: Impossibile aggiungere ai preferiti. Dati mancanti (Null).");
+                        } catch (Exception e) {
+                            System.err.println("Errore durante l'inserimento: il ristorante fa già parte dei preferiti!");
+                        }
+
                     case 3:
                         System.out.println("Rimozione del ristorante avvenuta con successo!");
                         gestorePreferiti.cancellaPreferiti(u, visto);
