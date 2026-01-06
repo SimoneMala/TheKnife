@@ -165,7 +165,7 @@ public class GestoreRecensione {
         return recensioniUtente;
     }
 
-    public List<Recensione> visualizzaRecensioniPerRistoratore (Ristorante ris, Utente ristoratore) {
+    public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) {
         List<Recensione> recensioniPerRistoratore = new ArrayList<>();
         for(Recensione rec : recensioni){
             if(ris.getNome().equals(rec.getNomeRistorante())){

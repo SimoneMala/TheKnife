@@ -4,5 +4,12 @@
     "testo": "Veramente molto buono, ma proprietaria un pò bassa",
     "stelle": 1,
     "username": "ProvaCliente1"
+  },
+  {
+    "nomeRistorante": "pao",
+    "testo": "pap",
+    "stelle": 2,
+    "rispostaRecensione": "grazie",
+    "username": "ProvaCliente1"
   }
 ]

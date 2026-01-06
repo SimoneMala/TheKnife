@@ -69,12 +69,23 @@ public class Ristorante {
                 "\nIndirizzo: " + indirizzo +
                 "\nLatitudine: " + latitudine +
                 "\nLongitudine: " + longitudine +
-                "\nPrezzo Medio: " + prezzoMedio +
-                "\nDelivery: " + delivery + //mettere si e no se è true o false
-                "\nPrenotazione: " + prenotazione +
+                "\nPrezzo Medio: " + prezzoMedioZero(prezzoMedio) +
+                "\nDelivery: " + formattoSieNo(delivery) +
+                "\nPrenotazione: " + formattoSieNo(prenotazione) +
                 "\nTipo di Cucina: " + tipoCucina +
-                "\nValutazione in Stelle: " + stelle +
-                "\nNome Proprietario: " + proprietario;
+                "\nValutazione in Stelle: " + stelle;
     }
 
+    public String formattoSieNo(Boolean valore){
+        if(valore == null){
+            return "Non spcecificato";}
+        // Se è true restituisce "sì", se è false restituisce "no"
+            return valore ? "Sì" : "No";
+        }
+    public String prezzoMedioZero(int prezzoMedio){
+        if(prezzoMedio == 0){
+            return "Non specificato";}
+        return Integer.toString(prezzoMedio);
+    }
 }
+

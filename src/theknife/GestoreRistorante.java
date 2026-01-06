@@ -83,7 +83,7 @@ public class GestoreRistorante {
 
     //metodo ricerca con filtri
     public List<Ristorante> cercaRistoranti(String tipoCucina, String citta, Double prezzoMin, Double prezzoMax,
-                                            boolean delivery, boolean prenotazione, Double stelle) throws ListaVuotaException {
+                                            Boolean delivery, Boolean prenotazione, Double stelle) throws ListaVuotaException {
         List<Ristorante> risultati = new ArrayList<>();
 
         for(Ristorante r: elencoRistoranti){
