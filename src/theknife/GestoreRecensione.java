@@ -27,7 +27,7 @@ public class GestoreRecensione {
                 //leggo contenuto del file e lo inserisco tutto in una string, poi inserisco il contenuto in una lista
                 String contenutoJson = Files.readString(Path.of(nomeFileJson));
 
-                this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Utente>>() {
+                this.recensioni = gson.fromJson(contenutoJson, new TypeToken<ArrayList<Recensione>>() {
                 }.getType());
             } catch (Exception e) {
                 System.err.println("Impossibile caricare dal file recensioni");
@@ -191,5 +191,10 @@ public class GestoreRecensione {
         return false;
     }
 
+    //metodo per gestire input opzionale (PREMERE INVIO PER NON MODIFICARE)
+    public static String gestisciInputOpzionale(String msg, Scanner sc, boolean blank) {
+        System.out.println(msg);
+        return sc.nextLine();
+    }
 
 }

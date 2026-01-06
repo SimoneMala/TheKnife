@@ -15,7 +15,7 @@ public class Preferito {
     public String getUsername(){
         return username;
     }
-    public String nomeRist(){
+    public String getNomeRist(){
         return nomeRist;
     }
 
