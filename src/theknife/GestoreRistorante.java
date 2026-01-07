@@ -91,9 +91,9 @@ public class GestoreRistorante {
 
             if (tipoCucina != null && !r.getTipoCucina().equals(tipoCucina)) {vaBene = false;}
             if(!r.getCitta().equals(citta)){vaBene = false;}
-            if (prezzoMin != null && r.getPrezzoMedio() < prezzoMin) {vaBene = false;}
+            if (prezzoMin != null && r.getPrezzoMedio() < prezzoMin){vaBene = false;}
             if(prezzoMax != null && r.getPrezzoMedio() > prezzoMax){vaBene = false;}
-            if(delivery && !r.getDelivery()){vaBene = false;}
+            if (delivery && !r.getDelivery()){vaBene = false;}
             if(prenotazione && !r.getPrenotazione()){vaBene = false;}
             //Ricordarsi che se passa null di farlo diventare 0 nel maim
             if(stelle != null && r.getStelle() < stelle){vaBene = false;}

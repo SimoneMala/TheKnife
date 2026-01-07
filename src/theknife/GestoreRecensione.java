@@ -69,7 +69,7 @@ public class GestoreRecensione {
         boolean trovato = false;
 
         for (Recensione rec : recensioni) {
-            if (rec.getNomeRistorante().equals(ris.getNome())) {
+            if (rec.getNomeRistorante().equalsIgnoreCase(ris.getNome().trim())) {
                 trovato = true;
                 recensioniRistorante.add(rec);
             }

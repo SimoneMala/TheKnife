@@ -2,13 +2,13 @@
   {
     "nomeRistorante": "I 5 Campanili",
     "testo": "Veramente molto buono, ma proprietaria un pò bassa",
-    "stelle": 1,
+    "stelle": 4,
     "username": "ProvaCliente1"
   },
   {
     "nomeRistorante": "pao",
     "testo": "pap",
-    "stelle": 2,
+    "stelle": 1,
     "rispostaRecensione": "grazie",
     "username": "ProvaCliente1"
   }

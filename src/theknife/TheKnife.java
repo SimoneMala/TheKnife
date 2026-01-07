@@ -7,6 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.util.*;
+
 public class TheKnife {
 
     //inizializzo tutti i gestori e scanner all'inizio in modo da poterli usare in tutti i metodi
@@ -509,7 +510,6 @@ public class TheKnife {
                                 (null, u.getCitta(), null, null, false, false, null);
                         if (!ristorantiVicini.isEmpty()) {
                             System.out.println("Ecco i ristoranti che si trovano vicino a te:");
-                            int numero = 1;
 
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiVicini);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
@@ -565,9 +565,11 @@ public class TheKnife {
                                 int stelleModificate = stelleInput.isEmpty() ? recensioneSelezionata.getStelle() : Integer.parseInt(stelleInput);
 
                                 gestoreRecensione.modificaRecensione(recensioneSelezionata, testoModificato, stelleModificate, u);
+                                modificaStelleRistorante(recensioneSelezionata.getNomeRistorante());
                                 System.out.println("Modificata!");
                             } else if (sceltaOperazione == 2) {
                                 gestoreRecensione.eliminaRecensione(recensioneSelezionata);
+                                modificaStelleRistorante(recensioneSelezionata.getNomeRistorante());
                                 System.out.println("Eliminata!");
                             }
                         } else {
@@ -596,6 +598,38 @@ public class TheKnife {
                 default: System.out.println("Scelta non valida");
             }
         }
+    }
+
+    public static void modificaStelleRistorante(String nomeRistorante){
+        List<Ristorante> ristoranti = gestoreRistorante.getElencoRistoranti();
+        Ristorante risto= null;
+        for (Ristorante r : ristoranti) {
+            if (r.getNome().equalsIgnoreCase(nomeRistorante)) {
+                risto= r;
+            }
+        }
+        double nuovaMedia=0.0;
+        if(risto!=null) {
+            try {
+                List<Recensione> recensioniRistorante = gestoreRecensione.visualizzaRecensioni(risto);
+                if (recensioniRistorante != null && !recensioniRistorante.isEmpty()) {
+                    System.out.println(recensioniRistorante.size());
+                    double somma = 0;
+                    double cont = 0;
+                    for (Recensione rec : recensioniRistorante) {
+                        somma += rec.getStelle();
+                        cont++;
+                    }
+                    nuovaMedia=somma/cont;
+                }
+                risto.setStelle(nuovaMedia);
+                gestoreRistorante.modificaFileJsonRistoranti(ristoranti);
+                System.out.println("Le stelle sono state aggiornate a:" + nuovaMedia);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     public static List<Ristorante> PreferitiInRistorante (List<Preferito> ristorantiPreferiti) {
@@ -637,6 +671,7 @@ public class TheKnife {
                         System.out.println("Inserisci il numero di stelle (1-5):");
                         int stelle = IntInput();
                         gestoreRecensione.inserisciRecensione(visto, testo, stelle, u.getUsername());
+                        modificaStelleRistorante(visto.getNome());
                         System.out.println("Recensione inserita con successo!");
                         break;
 
