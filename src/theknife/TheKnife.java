@@ -689,6 +689,14 @@ public class TheKnife {
 
     }
 
+    /**
+     * Gestisce il menu e le operazioni specifiche per l'utente con ruolo Ristoratore.
+     * <p>
+     *     Attraverso questo metodo, il ristoratore può aggiungere nuovi ristoranti, visualizzare e modificare i propri ristoranti,
+     *     visualizzare il riepilogo delle recensioni, rispondere alle recensioni dei clienti.
+     * </p>
+     * @param ristoratoreLoggato L'utente attualmente loggato con ruolo Ristoratore.
+     */
     public static void paginaRistoratore(Utente ristoratoreLoggato){
         int scelta;
 
@@ -881,6 +889,14 @@ public class TheKnife {
         } while(scelta != 0);
     }
 
+    /**
+     * Raccoglie gli input dell'utente per creare un nuovo oggetto Ristorante.
+     * Richiede all'utente di inserire vari dettagli come nazione, città, indirizzo, latitudine, longitudine,
+     * prezzo medio, disponibilità di delivery e prenotazione, tipo di cucina, e assegna 0 stelle iniziali.
+     * @param ristoratoreLoggato L'utente ristoratore che sta creando il ristorante.
+     * @param nomeControllato Il nome del ristorante da creare, già controllato per evitare duplicati.
+     * @return Un nuovo oggetto Ristorante inizializzato con i dati forniti dall'utente Ristoratore.
+     */
     public static Ristorante datiRistorante(Utente ristoratoreLoggato, String nomeControllato) {
         System.out.print("Nazione: ");
         String nazione = StringInput();
@@ -908,6 +924,14 @@ public class TheKnife {
     }
 
     // 1. PER LE STRINGHE (Nome, Città, ecc.)
+
+    /**
+     * Permette la modifica di un campo stringa tramite input da tastiera.
+     * Se l'utente preme invio senza inserire nulla, viene mantenuto il originale.
+     * @param messaggio Campo del ristorante da modificare (es. "Nome", "Città").
+     * @param vecchioValore Valore attuale del campo.
+     * @return La nuova stringa inserita dall'utente oppure il vecchio valore.
+     */
     public static String modificaStringa(String messaggio, String vecchioValore) {
         System.out.print(messaggio + " (" + vecchioValore + "): ");
         String input = scanner.nextLine().trim();
@@ -917,7 +941,16 @@ public class TheKnife {
         }
         return input; // Ritorna il nuovo
     }
+
     // 2. PER I NUMERI INTERI (Prezzo Medio)
+
+    /**
+     * Permette la modifica di un valore intero tramite input da tastiera.
+     * Continua a richiedere l'input finché non viene inserito un intero valido o si preme invio per mantenere il vecchio valore.
+     * @param messaggio Campo del ristorante da modificare (es. "Prezzo Medio").
+     * @param vecchioValore Valore attuale del campo.
+     * @return Il nuovo intero inserito dall'utente oppure il vecchio valore.
+     */
     public static int modificaIntero(String messaggio, int vecchioValore) {
         while (true) {
             System.out.print(messaggio + " (" + vecchioValore + "): ");
@@ -940,7 +973,17 @@ public class TheKnife {
             }
         }
     }
+
     // 3. PER I DOUBLE (Latitudine, Longitudine)
+
+    /**
+     * Permette la modifica di un valore double tramite input da tastiera.
+     * Gestisce sia la virgola che il punto come separatori decimali. Con anche controllo finché non venga inserito un double valido
+     * o si preme invio per mantenere il vecchio valore.
+     * @param messaggio Campo del ristorante da modificare (es. "Latitudine", "Longitudine").
+     * @param vecchioValore Valore attuale del campo.
+     * @return Il nuovo double inserito dall'utente oppure il vecchio valore.
+     */
     public static double modificaDouble(String messaggio, double vecchioValore) {
         while (true) {
             System.out.print(messaggio + " (" + vecchioValore + "): ");
@@ -959,7 +1002,16 @@ public class TheKnife {
             }
         }
     }
+
     // 4. PER I BOOLEANI (Delivery, Prenotazione - Logica Si/No)
+
+    /**
+     * Permette la modifica di un valore booleano tramite input testuale "si"/"no".
+     * Continua a richiedere l'input finché non viene inserito un valore valido o si preme invio per mantenere il vecchio valore.
+     * @param messaggio Campo del ristorante da modificare (es. "Delivery", "Prenotazione").
+     * @param vecchioValore Valore attuale del campo.
+     * @return Il nuovo booleano inserito dall'utente oppure il vecchio valore.
+     */
     public static boolean modificaSiNo(String messaggio, boolean vecchioValore) {
         while (true) {
             String labelVecchio = vecchioValore ? "sì" : "no";

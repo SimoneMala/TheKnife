@@ -13,13 +13,45 @@ import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * La classe <code>GestoreRistorante</code> si occupa della gestione dei dati relativi ai ristoranti.
+ * <p>
+ *     Questa classe gestisce la conversione da CSV a JSON, il caricamento(da JSON), il salvataggio, la ricerca
+ *     e il filraggio dei ristoranti.
+ *     Utilizza la librearia Gson per la serializzazione e deserializzazione dei dati in formato JSON.
+ * </p>
+ *
+ * @author Simone Malacrida
+ */
 public class GestoreRistorante {
     //campi
+
+    /** La lista contenente tutti gli oggetti Ristorante caricati in memoria.
+     * Memorizzata nell'attributo <code>elencoRistoranti</code>.
+     */
     private List<Ristorante> elencoRistoranti;
-    private final String percorsoFileMemorizzato; //salvo il percorso del file json
+
+    /** Il percorso del file JSON utilizzato per la persistenza dei dati.
+     * Memorizzato nell'attributo <code>percorsoFileMemorizzato</code>.
+     */
+    private final String percorsoFileMemorizzato;//salvo il percorso del file json
+
+    /** L'istanza di Gson utilizzata per le operazioni di serializzazione e deserializzazione su file JSON.
+     * Memorizzata nell'attributo <code>gson</code>.
+     */
     private final Gson gson;
 
     //costruttore
+
+    /**
+     * Costruisce un oggetto <code>GestoreRistorante</code> e inizializza i dati.
+     * <p>
+     *     Se il file JSON specificato esiste e contiene dati, carica i ristoranti da quel file.
+     *     Altrimenti, i dati vengono importati da un file CSV predefinito("Dati/RistorantiTheKnife.csv")
+     *     e salvati nel nuovo file JSON.
+     * </p>
+     * @param nomeFileJson Il percorso del file JSON da utilizzare per il salvataggio e il caricamento dei dati.
+     */
     public GestoreRistorante(String nomeFileJson){ //passo il percorso del file json
         this.percorsoFileMemorizzato = nomeFileJson;
         this.gson= new GsonBuilder().setPrettyPrinting().create();
@@ -49,7 +81,7 @@ public class GestoreRistorante {
 
                     if (v.length < 12) continue;
 
-                    // Usiamo un metodo 'clean' per togliere le virgolette e gli spazi extra
+                    // Usiamo il metodo 'clean' per togliere le virgolette e gli spazi extra
                     String name = clean(v[0]);
                     String nazione = clean(v[1]);
                     String citta = clean(v[2]);
@@ -82,6 +114,20 @@ public class GestoreRistorante {
     }
 
     //metodo ricerca con filtri
+
+    /**
+     * Cerca ristoranti che soddisfino una serie di criteri filtro.
+     * I parametri nulli vengono ignorati durante il filtraggio.
+     * @param tipoCucina Il tipo dii cucina desiderato.(Può essere null)
+     * @param citta La città in cui cercare(Obbliagatorio per la logica attuale)
+     * @param prezzoMin Il prezzo minimo desiderato.(Può essere null)
+     * @param prezzoMax Il prezzo massimo desiderato.(Può essere null)
+     * @param delivery Se <code>true</code>, filtra solo ristoranti con delivery; altrimenti ignora questo filtro.
+     * @param prenotazione Se <code>true</code>, filtra solo ristoranti che accettano prenotazioni online; altrimenti ignora questo filtro.
+     * @param stelle La valutazione minima in stelle desiderata.(Può essere null)
+     * @return Una lista di oggetti <code>Ristorante</code> che soddisfano i criteri di ricerca.
+     * @throws ListaVuotaException Se nessun ristorante soddisfa i criteri di ricerca.
+     */
     public List<Ristorante> cercaRistoranti(String tipoCucina, String citta, Double prezzoMin, Double prezzoMax,
                                             Boolean delivery, Boolean prenotazione, Double stelle) throws ListaVuotaException {
         List<Ristorante> risultati = new ArrayList<>();
@@ -107,7 +153,15 @@ public class GestoreRistorante {
     }
 
     //cerco ristorante e visualizzo dettagli
-    public Ristorante visualizzaRistorante(String nome, String citta)throws NullPointerException{
+
+    /**
+     * Trovo un ristorante specifico tramite nome e città.
+     * @param nome Il nome del ristorante da cercare.
+     * @param citta La città in cui si trova il ristorante.
+     * @return L'oggetto <code>Ristorante</code> corrispondente ai parametri di ricerca.
+     * @throws ListaVuotaException Se il ristorante non viene trovato.
+     */
+    public Ristorante visualizzaRistorante(String nome, String citta)throws ListaVuotaException {
         for(Ristorante r: elencoRistoranti){
             if(r.getNome().equals(nome) && r.getCitta().equals(citta)){return r;}
         }
@@ -115,6 +169,11 @@ public class GestoreRistorante {
     }
 
     //Aggiungi ristorante al file json
+
+    /**
+     * Aggiunge un nuovo ristorante alla lista e aggiorna il file JSON.
+     * @param ristorante L'oggetto <code>Ristorante</code> da aggiungere.
+     */
     public void aggiungiRistorante(Ristorante ristorante){
         this.elencoRistoranti.add(ristorante); //aggiorno la lista in memroia
         //aggiorno il file json
@@ -122,6 +181,11 @@ public class GestoreRistorante {
     }
 
     //Modifica diretta del FileJson
+
+    /**
+     * Sovrascrive l'intero file JSON con la lista di ristoranti fornita.
+     * @param modifica La nuova lista di oggetti <code>Ristorante</code> da salvare.
+     */
     public void modificaFileJsonRistoranti(List<Ristorante> modifica) {
         this.elencoRistoranti = modifica;
         try {
@@ -132,6 +196,11 @@ public class GestoreRistorante {
         }
     }
 
+    /**
+     * Restituisce una lista di ristoranti di proprietà di uno specifico utente.
+     * @param nomeProprietario Il nome del proprietario dei ristoranti da cercare.
+     * @return Una lista di oggetti <code>Ristorante</code> appartenenti al proprietario specificato.
+     */
     public List<Ristorante> getRistoranteDi(String nomeProprietario){
         List<Ristorante> risultati = new ArrayList<>();
         for(Ristorante r: elencoRistoranti){
@@ -142,11 +211,20 @@ public class GestoreRistorante {
         return risultati;
     }
 
+    /**
+     * Restituisce l'elenco completo dei ristoranti.
+     * @return La lista completa di oggetti <code>Ristorante</code>.
+     */
     public List<Ristorante> getElencoRistoranti() {
         return elencoRistoranti;
     }
 
     //Tutti i tipi di cucina presenti(senza duplicati)
+
+    /**
+     * Restituisce una lista di tutte le tipologie di cucina presenti nel sistema, senza duplicati.
+     * @return Una lista di stringhe rappresentanti i tipi di cucina unici.
+     */
     public List<String> getTipiCucinaLista(){
         List<String> tipiCucina = new ArrayList<>();
         for(Ristorante r: elencoRistoranti){
@@ -158,6 +236,14 @@ public class GestoreRistorante {
 
     // Metodo helper per pulire le stringhe: toglie spazi e virgolette agli estremi
     // Es: "  \"Vienna\" " diventa "Vienna"
+
+    /**
+     * Pulisce una stringa rimuovendo spazi vuoti e virgolette agli estremi.
+     * Rimuove gli spazi iniziali e finali, e se la stringa inizia e finisce con virgolette,
+     * le rimuove.
+     * @param input La stringa da pulire.
+     * @return La stringa pulita.
+     */
     private static String clean(String input) {
         if (input == null) return "";
         input = input.trim();
@@ -169,6 +255,14 @@ public class GestoreRistorante {
     }
 
     // Metodo helper per convertire i numeri senza crashare se sono vuoti
+
+    /**
+     * Converte una stringa in un valore double in modo sicuro.
+     * Se la stringa è nulla o vuota, restituisce 0.0.
+     * Se la conversione fallisce, stampa un messaggio di avviso e restituisce 0.0.
+     * @param input La stringa da convertire in double.
+     * @return Il valore double risultante, oppure 0.0 se la stringa è nulla, vuota o non valida.
+     */
     private static double parseDoubleSafe(String input) {
         if (input == null || input.isEmpty()) return 0.0;
         try {
