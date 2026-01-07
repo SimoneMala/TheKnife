@@ -1,7 +1,6 @@
 package theknife;
 
 import com.google.gson.GsonBuilder;
-import theknife.eccezioni.IllegalArgumentException;
 import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
 

@@ -229,7 +229,11 @@ public class TheKnife {
         if(scelta){
             try {
                 System.out.println("Recensioni per il ristorante " + ristorante.getNome());
-                recensioniRistorante = (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioni(ristorante);
+                recensioniRistorante = (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioniPerRistoratore(ristorante);
+                if(recensioniRistorante.isEmpty()){
+                    System.out.println("Non ci sono recensioni per questo ristorante.");
+                    return;
+                }
                 int count = 1;
                 for (Recensione r : recensioniRistorante) {
                     if (r.getRispostaRecensione() != null) {
@@ -547,8 +551,10 @@ public class TheKnife {
 
                         System.out.println("1 per modificare, 2 per eliminare, 0 per uscire:");
                         int sceltaOperazione = IntInput();
-                        if (sceltaOperazione == 0) break;
-
+                        if (sceltaOperazione == 0) {
+                            System.out.println("Uscita in corso...");
+                            break;
+                        }
                         System.out.println("Scegli il numero della recensione:");
                         int sceltaRecensione = IntInput();
 
@@ -668,8 +674,11 @@ public class TheKnife {
                     case 4:
                         try {
                             System.out.println("Ecco le recensioni del ristorante:");
-                            List<Recensione> recs = gestoreRecensione.visualizzaRecensioni(visto);
-
+                            List<Recensione> recs = gestoreRecensione.visualizzaRecensioniPerRistoratore(visto);
+                            if(recs.isEmpty()){
+                                System.out.println("Non ci sono recensioni per questo ristorante.");
+                                break;
+                            }
                         for (Recensione r : recs) {
                             System.out.println(r + " ");
                             }
