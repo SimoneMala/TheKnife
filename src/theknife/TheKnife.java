@@ -779,7 +779,7 @@ public class TheKnife {
         double nuovaMedia=0.0;
         if(risto!=null) {
             try {
-                List<Recensione> recensioniRistorante = gestoreRecensione.visualizzaRecensioni(risto);
+                List<Recensione> recensioniRistorante = gestoreRecensione.visualizzaRecensioniPerRistoratore(risto);
                 if (recensioniRistorante != null && !recensioniRistorante.isEmpty()) {
                     System.out.println(recensioniRistorante.size());
                     double somma = 0;
