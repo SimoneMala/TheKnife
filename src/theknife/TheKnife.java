@@ -67,7 +67,7 @@ public class TheKnife {
         System.out.println("Benvenuto in TheKnife!");
         //scelta dell'operazione
         while(true){
-            System.out.println("1: Login \n2: Registrazione \n3: Accedi come guest \n4: Esci da TheKnife" );
+            System.out.println("\n1: Login \n2: Registrazione \n3: Accedi come guest \n4: Esci da TheKnife" );
             System.out.println("Digitare il numero dell'operazione scelta:");
             //controlli sull'inserimento di un intero
             int op= IntInput();
@@ -83,7 +83,7 @@ public class TheKnife {
                     break;
                 //scelta accesso come guest
                 case 3:
-                    System.out.println("Inserire un luogo vicino a lei:");
+                    System.out.println("Inserire un luogo vicino a te (città):");
 
                     //controlli sull'inserimento del luogo
                     String luogo= StringInput();
@@ -107,7 +107,7 @@ public class TheKnife {
      * </p>
      */
     public static void paginaLogin() {
-        System.out.println("Login");
+        System.out.println("\nLogin");
         System.out.println("Inserire lo username:");
         String username = StringInput();
         System.out.println("Inserire la password:");
@@ -226,10 +226,10 @@ public class TheKnife {
      */
     public static void paginaGuest(String luogo){
         //stampe per pagina guest
-        System.out.println("Benvenuto nell'area Guest!");
+        System.out.println("\nBenvenuto nell'area Guest!");
         //scelta dell'operazione
         while (true){
-            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
+            System.out.println("\n1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
             int op= IntInput();
 
             switch (op){
@@ -286,7 +286,7 @@ public class TheKnife {
      * @param ristorante Il ristorante di cui si chiede se visualizzare le recensioni.
      */
     public static void recensioniAnonime(Ristorante ristorante){
-        System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "?");
+        System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "? (si o no)");
         boolean scelta= siNoInput();
         ArrayList<Recensione> recensioniRistorante;
         if(scelta){
@@ -304,6 +304,7 @@ public class TheKnife {
                     } else {
                         System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle());
                     }
+                    System.out.println("-------------------------");
                 }
             }catch (IllegalArgumentException e){
                 System.out.println(e.getMessage());
@@ -375,7 +376,7 @@ public class TheKnife {
      */
     public static List<Ristorante> ricercaConFiltri(){
         System.out.println("Inserisci i filtri che vuoi aggiungere, se non vuoi aggiungerli premi invio");
-        System.out.println("Filtro citta (obbligatorio, non puoi lasciarlo vuoto):");
+        System.out.println("Filtro città (obbligatorio, non puoi lasciarlo vuoto):");
         boolean cittaGiusto = false;
         String citta="";
         while(!cittaGiusto) {
@@ -383,10 +384,10 @@ public class TheKnife {
             if(!citta.isEmpty()){
                 cittaGiusto = true;
             }else{
-                System.out.println("La citta è obbligatoria, non puoi lasciarla vuota!");
+                System.out.println("La città è obbligatoria, non puoi lasciarla vuota!");
             }
         }
-        System.out.println("Filtro tipo cucina (inserisci il nome del tipo cucina che vuoi)");
+        System.out.println("Filtro tipo cucina (inserisci il nome del tipo cucina che vuoi):");
         String tipologiaCucina= scanner.nextLine();
         boolean continua=true;
         while(continua) {
@@ -395,17 +396,19 @@ public class TheKnife {
             }else {
                 ArrayList<String> tipiCucina = (ArrayList<String>) gestoreRistorante.getTipiCucinaLista();
                 if (!tipiCucina.contains(tipologiaCucina)) {
-                    System.out.println("La tipologia scritta non è presente tra i ristoranti, vuoi provare a inserirne un altra?");
+                    System.out.println("La tipologia scritta non è presente tra i ristoranti, vuoi provare a inserirne un altra?(si o no)");
                     boolean scelta = siNoInput();
                     if (scelta) {
                         System.out.println("Prova a inserirla in inglese! Altrimenti inseriscine un altra:");
                         tipologiaCucina = StringInput();
                     } else {
+                        tipologiaCucina="";
                         continua = false;
                     }
                 }
             }
         }
+        System.out.println("I prezzi dei ristoranti sono prezzi medi, in cui un numero identifica quanto spenderai");
         System.out.println("Filtro prezzo massimo (inserisci un numero):");
         Double prezzoMassimo= doubleInputOrNull();
         System.out.println("Filtro prezzo minimo (inserisci un numero):");
@@ -545,7 +548,7 @@ public class TheKnife {
             try{
                 return Integer.parseInt(input);
             }catch(NumberFormatException e){
-                System.out.println("Input non valido, inserire un numero senza virgola oppure premere invio per saltare!");
+                System.out.println("Input non valido \nInserire un numero senza virgola oppure premere invio per saltare!");
             }
         }
     }
@@ -593,7 +596,7 @@ public class TheKnife {
             }else if (scelta.equalsIgnoreCase("no")){
                 return false;
             }else{
-                System.out.println("Input non valido, inserire o si o no!");
+                System.out.println("Input non valido \nInserire o si o no!");
             }
         }while(true);
     }
@@ -627,8 +630,10 @@ public class TheKnife {
             switch (scelta) {
                 //visualizzazione i dati utente
                 case 1:
+                    System.out.println("---Ecco i tuoi dati personali--");
                     System.out.println("Nome:" + u.getNome() + "\nCognome:" + u.getCognome() + "\nUsername:"
                             + u.getUsername() + "\nVia:" + u.getVia() + "\nCitta:" + u.getCitta());
+                    System.out.println("-------------------------");
                     break;
 
                 //modifica dati utente
@@ -657,6 +662,7 @@ public class TheKnife {
                     gestoreUtenti.modificaFileJsonUtenti(gestoreUtenti.getListaUtenti());
 
                     System.out.println("Dati aggiornati con successo.");
+                    System.out.println("-------------------------");
                     break;
 
                 //visualizzazione ristoranti vicini
@@ -781,7 +787,6 @@ public class TheKnife {
             try {
                 List<Recensione> recensioniRistorante = gestoreRecensione.visualizzaRecensioniPerRistoratore(risto);
                 if (recensioniRistorante != null && !recensioniRistorante.isEmpty()) {
-                    System.out.println(recensioniRistorante.size());
                     double somma = 0;
                     double cont = 0;
                     for (Recensione rec : recensioniRistorante) {
@@ -792,7 +797,6 @@ public class TheKnife {
                 }
                 risto.setStelle(nuovaMedia);
                 gestoreRistorante.modificaFileJsonRistoranti(ristoranti);
-                System.out.println("Le stelle sono state aggiornate a:" + nuovaMedia);
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
@@ -905,10 +909,9 @@ public class TheKnife {
      */
     public static void paginaRistoratore(Utente ristoratoreLoggato){
         int scelta;
-
+        System.out.println("Benvenuto " + ristoratoreLoggato.getNome() + " nell'area Ristoratore!");
         do {
             //stampe per pagina ristoratore
-            System.out.println("Benvenuto " + ristoratoreLoggato.getNome() + " nell'area Ristoratore!");
             System.out.println("Scegli l'operazione da effettuare:");
             System.out.println("1. Aggiungi Ristorante");
             System.out.println("2. Visualizza Ristoranti e modificali");
@@ -967,6 +970,7 @@ public class TheKnife {
                     }
                     Ristorante ristoranteScelto = rist.get(sceltaRisto - 1);
                     // MODIFICA STRINGHE
+                    System.out.println("Se non vuoi modificare un informazione premi invio");
                     ristoranteScelto.setNome(modificaStringa("Nome", ristoranteScelto.getNome()));
                     ristoranteScelto.setNazione(modificaStringa("Nazione", ristoranteScelto.getNazione()));
                     ristoranteScelto.setCitta(modificaStringa("Città", ristoranteScelto.getCitta()));
