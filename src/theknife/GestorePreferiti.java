@@ -1,10 +1,8 @@
 package theknife;
 
 import com.google.gson.GsonBuilder;
-import theknife.eccezioni.IllegalArgumentException;
 import theknife.eccezioni.ListaVuotaException;
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,13 +10,47 @@ import com.google.gson.reflect.TypeToken;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Gestisce la logica legata ai ristoranti preferiti aggiunti da ogni cliente.
+ * <p>
+ *     Questa classe mantiene la lista dei ristoranti preferiti di ogni utente, si occupa del caricamento e salvataggio
+ *     su file JSON dedicato e fornisce metodi di modifica e visualizzazione della lista.
+ * </p>
+ * @author Aurora Sarno.
+ */
 public class GestorePreferiti {
 
-    //campi
+    /**
+     * Lista completa dei preferiti caricati in memoria.
+     * <p>
+     *     La lista viene inizializzata dal costruttore e riempita dagli oggetti del file JSON a ogni avvio dell'applicazione.
+     * </p>
+     */
     private List<Preferito> ristorantiPreferiti;
+
+    /**
+     * Percorso per trovare il file JSON dove sono caricati i preferiti in memoria.
+     */
     private final String percorsoFileMemorizzato;
+
+    /**
+     * Istanza di <code>Gson</code> utilizzata per la lettura e scrittura dei dati JSON.
+     * <p>
+     *     Viene inizializzata nel costruttore con l'opzione "Pretty Printing"
+     *     per garantire che i file vengano salvati con una formattazione leggibile.
+     * </p>
+     */
     private final Gson gson;
-    //costruttore a cui poi aggiungere il metodo carica() che carica dal file json i ristoranti nella lista
+
+    /**
+     * Costruisce e riempie la lista <code>ristorantiPreferiti</code> con i dati del file JSON.
+     * <p>
+     *     La lista <code>ristorantiPreferiti</code> viene riempita dal costruttore,
+     *     ma nel caso il file JSON risulti vuoto o inesistente, viene comunque creata una lista vuota
+     *     e stampato il messaggio dell'errore.
+     * </p>
+     * @param nomeFile Il nome del file JSON dove si trovano i dati preferito.
+     */
     public GestorePreferiti(String nomeFile){
         this.percorsoFileMemorizzato = nomeFile;
         this.gson = new GsonBuilder().setPrettyPrinting().create();
@@ -39,13 +71,26 @@ public class GestorePreferiti {
         }
     }
 
-    //metodo get
+    /**
+     * Restituisce la lista <code>ristorantiPreferiti</code> che contiene i preferiti.
+     * @return La lista che contiene i preferiti.
+     */
     public List<Preferito> getRistorantiPreferiti() {
         return ristorantiPreferiti;
     }
 
-    //metodo che aggiunge un ristorante alla lista di preferiti inerente a un utente
-    //nel main controllo che utente e ristorante esistono
+    /**
+     * Aggiunge un ristorante preferito alla lista <code>ristorantiPreferiti</code>.
+     * <p>
+     *     Il metodo controlla se è già presente nella lista <code>ristorantiPreferiti</code>
+     *     un preferito con stesso username dell'utente e stesso nome del ristoratore associati,
+     *     se non è presente viene aggiunto alla lista.
+     * </p>
+     * @param utente L'utente che sta aggiungendo il ristorante preferito.
+     * @param ristorante Il ristorante preferito dall'utente.
+     * @throws NullPointerException Se l'utente o il ristorante risultano <code>null</code>.
+     * @throws IllegalArgumentException Se il ristorante fa già parte dei preferiti di questo utente
+     */
     public void aggiungiPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException, IllegalArgumentException {
         if (utente==null || ristorante==null){
             throw new NullPointerException("Utente o ristorante non corretti");
@@ -61,7 +106,18 @@ public class GestorePreferiti {
         ModificaFileJsonPreferiti(this.ristorantiPreferiti);
     }
 
-    //metodo per eliminare un ristorante dalla mia lista
+    /**
+     * Elimina un ristorante preferito dalla lista <code>ristorantiPreferiti</code>.
+     * <p>
+     *     Il metodo controlla che il preferito associato allo username di <code>utente</code> e
+     *     al nome di <code>ristorante</code> sia presente nella lista <code>ristorantiPreferiti</code>,
+     *     se è presente viene tolto alla lista.
+     * </p>
+     * @param utente L'utente che vuole eliminare un ristorante dai suoi preferiti.
+     * @param ristorante Il ristorante preferito, aggiunto precedentemente, da rimuovere.
+     * @throws NullPointerException Se l'utente o il ristorante risultano <code>null</code>.
+     * @throws ListaVuotaException Se la lista <code>ristorantiPreferiti</code> risulta già vuota.
+     */
     public void cancellaPreferiti(Utente utente, Ristorante ristorante) throws NullPointerException, ListaVuotaException{
         if (utente==null || ristorante==null){
             throw new NullPointerException("theknife.Utente o ristorante non corretti");
@@ -80,6 +136,19 @@ public class GestorePreferiti {
     }
 
     //restituisce la lista di preferiti per l'utente, per visualizzare la lista nel main la stampo
+
+    /**
+     * Restituisce una lista di preferiti associati allo username dell'utente passato.
+     * <p>
+     *     Il metodo crea la lista da restituire, cerca nella lista <code>ristorantiPreferiti</code>
+     *     se sono presenti preferiti associati all'utente e li aggiunge alla lista da restituire.
+     * </p>
+     * @param utente L'utente che vuole visualizzare la sua lista di preferiti.
+     * @return La lista di preferiti associati allo username dell'<code>utente</code> passato.
+     * @throws ListaVuotaException Se la lista <code>ristorantiPreferiti</code> è vuota o se non sono presenti
+     * preferiti associati all'utente nella lista.
+     *
+     */
     public List<Preferito> visualizzaPreferiti(Utente utente) throws ListaVuotaException{
         if (this.ristorantiPreferiti.isEmpty()){
             throw new ListaVuotaException("Non sono presenti preferiti");
@@ -97,6 +166,15 @@ public class GestorePreferiti {
         return tmp;
     }
 
+    /**
+     * Aggiorna la lista interna e salva le modifiche sul file JSON.
+     * <p>
+     *     Questo metodo sovrascrive il contenuto del file con la nuova lista passata come parametro,
+     *     serializzandola tramite l'istanza di <code>Gson</code>.
+     *     In caso di errore di scrittura, viene stampato un messaggio di errore.
+     * </p>
+     * @param modifica La nuova lista di preferiti da salvare nel file JSON.
+     */
     public void ModificaFileJsonPreferiti(List<Preferito> modifica){
         this.ristorantiPreferiti=modifica;
         try{

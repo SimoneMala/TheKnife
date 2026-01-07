@@ -11,13 +11,43 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * Gestisce la logica legata agli utenti registrati.
+ * <p>
+ *     Questa classe mantiene la lista degli utenti registrati, si occupa del caricamento e salvataggio
+ *     su file JSON dedicato e fornisce metodo per autenticazione e registrazione all'applicazione.
+ * </p>
+ * @author Aurora Sarno.
+ */
 public class GestoreUtenti {
-    //campi
-    //lista che contiene i dati del JSON riguardo agli utenti
+     /**
+     * Lista completa degli utenti caricati in memoria.
+     */
     private List<Utente> listaUtenti;
+
+    /**
+     * Percorso per trovare il file dove sono caricati gli utenti registrati.
+     */
     private final String percorsoFileMemorizzato;
+
+    /**
+     * Istanza di <code>Gson</code> utilizzata per la lettura e scrittura dei dati JSON.
+     * <p>
+     *     Viene inizializzata nel costruttore con l'opzione "Pretty Printing"
+     *     per garantire che i file vengano salvati con una formattazione leggibile.
+     * </p>
+     */
     private final Gson gson;
-    //nel costruttore poi chiameremo il metodo carica che carica dal file json alla lista i miei utenti
+
+    /**
+     * Costruisce e riempie la <code>listaUtenti</code> con i dati del file JSON.
+     * <p>
+     *     La lista <code>listaUtenti</code> viene riempita dal costruttore,
+     *     ma nel caso il file JSON risulti vuoto o inesistente, viene comunque creata una lista vuota
+     *     e stampato il messaggio dell'errore.
+     * </p>
+     * @param nomeFileJson Il nome del file JSON dove si trovano i dati utenti.
+     */
     public GestoreUtenti(String nomeFileJson) {
         this.percorsoFileMemorizzato=nomeFileJson;
         this.gson= new GsonBuilder().setPrettyPrinting().create();
@@ -40,12 +70,27 @@ public class GestoreUtenti {
 
     }
 
-    //metodo get
+    /**
+     * Restituisce la lista che contiene gli utenti.
+     * @return La lista che contiene gli utenti.
+     */
     public List<Utente> getListaUtenti() {
         return listaUtenti;
     }
 
-    //metodo che dati username e password controlla se utente esiste e salva quale utente ha fatto l'accesso
+    /**
+     * Controlla le credenziali dell'utente per permettere l'accesso all'applicazione.
+     * <p>
+     *     Il metodo cerca nella <code>listaUtenti</code> è presente l'utente che sta tentando il login.
+     *     La verifica della password viene effettuata tramite il metodo <code>checkpw</code> della classe <code>BCrypt</code>
+     *     che confronta la password inserita con l'hash salvato.
+     * </p>
+     * @param username Lo username univoco dell'utente.
+     * @param password La password in chiaro da verificare.
+     * @return L'oggetto <code>Utente</code> che ha effettuato il login se le credenziali sono corrette.
+     * @throws NullPointerException Se la lista è vuota o i parametri sono <code>null</code>.
+     * @throws UtenteInesistente Se le credenziali sono errate.
+     */
     public Utente login(String username, String password) throws NullPointerException, UtenteInesistente {
         if (listaUtenti.isEmpty() || username == null || password == null) {
             throw new NullPointerException("Non è possibile eseguire il login");
@@ -64,7 +109,11 @@ public class GestoreUtenti {
 
     }
 
-    //aggiungo il nuovo utente alla mia lista e al file JSON
+    /**
+     * Aggiunge alla <code>listaUtenti</code> il nuovo utente registrato.
+     * @param utente L'utente che ha eseguito la registrazione.
+     * @throws NullPointerException Se l'utente inserito è <code>null</code>.
+     */
     public void registrazioneUtente(Utente utente) throws NullPointerException {
         //controllo che utente non sia vuoto
         if (utente == null) {
@@ -79,8 +128,17 @@ public class GestoreUtenti {
 
     }
 
+    /**
+     * Aggiorna la lista interna e salva le modifiche sul file JSON.
+     * <p>
+     *     Questo metodo sovrascrive il contenuto del file con la nuova lista passata come parametro,
+     *     serializzandola tramite l'istanza di <code>Gson</code>.
+     *     In caso di errore di scrittura, viene stampato un messaggio di errore.
+     * </p>
+     * @param modifica La nuova lista di utenti da salvare nel file JSON.
+     */
     public void modificaFileJsonUtenti(List<Utente> modifica){
-        //cambio la lista in quella da nuova
+        //cambio la lista in quella nuova
         this.listaUtenti = modifica;
         try{
             //metto in una stringa il contenuto della lista in formato Json
