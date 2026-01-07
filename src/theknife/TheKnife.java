@@ -7,6 +7,17 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.util.*;
+
+/**
+ * Classe principale del progetto <code>TheKnife</code>.
+ * <p>
+ *     Questa classe contiene il metodo statico <code>main</code> che viene invocato dalla JVM all'avvio.
+ *     Si occupa di inizializzare i gestori dei dati e di avviare l'interfaccia per l'interazione con il sistema
+ * </p>
+ * @author Aurora Sarno
+ * @author Simone Malacrida
+ * @author Greta Giorgetti
+ */
 public class TheKnife {
 
     //inizializzo tutti i gestori e scanner all'inizio in modo da poterli usare in tutti i metodi
@@ -16,6 +27,14 @@ public class TheKnife {
     private static GestorePreferiti gestorePreferiti;
     private static GestoreUtenti gestoreUtenti;
 
+    /**
+     * Metodo principale che avvia l'esecuzione dell'applicazione.
+     * <p>
+     *     Inizializza l'ambiente di lavoro e istanzia gli oggetti necessari al funzionamento del programma,
+     *     per poi passare il controllo al menù principale
+     * </p>
+     * @param args Argomenti da riga di comando, attualmente non utilizzati
+     */
     public static void main(String[] args) {
 
         //creo i gestori, che mi serviranno per gestire tutti i dati
@@ -36,6 +55,14 @@ public class TheKnife {
 
     }
 
+    /**
+     * Gestisce il menù principale (Home) dell'applicazione
+     * <p>
+     *     Questo metodo stampa le opzioni disponibili (Login, Registrazione, Accesso Guest e Uscita)
+     *     e gestisce la navigazione verso le pagine successive tramite un ciclo continuo (fino alla scelta di uscita)
+     *     tramite l'input inserito dall'utente.
+     * </p>
+     */
     public static void paginaHome(){
         System.out.println("Benvenuto in TheKnife!");
         //scelta dell'operazione
@@ -72,6 +99,13 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Gestisce la procedura di Login per un utente già registrato.
+     * <p>
+     *     In questo metodo viene richiesto di inserire lo username e la password del proprio profilo utente,
+     *     se sono corretti l'utente viene indirizzato alla sua pagina (Cliente o Ristoratore)
+     * </p>
+     */
     public static void paginaLogin() {
         System.out.println("Login");
         System.out.println("Inserire lo username:");
@@ -104,6 +138,17 @@ public class TheKnife {
     }
 
     //richiesta di informazioni per creare l'utente da registrare
+    /**
+     * Gestisce la procedura di registrazione per un nuovo utente.
+     * <p>
+     *     In questo metodo viene richiesto di inserire tutte le informazioni necessarie per registrare un nuovo utente.
+     *     All'inserimento del nome viene fatto un controllo per assicurarsi che non esistano altri utenti
+     *     con lo stesso username, se esistono viene chiesto un nuovo username.
+     *     Per garantire la sicurezza dei dati, la password inserita viene memorizzata sotto forma di hash
+     *     generati tramite il metodo <code>hashpw</code> della libreria <code>BCrypt</code>.
+     *     Dopo la registrazione l'utente viene indirizzato direttamente alla pagina di login.
+     * </p>
+     */
     public static void paginaRegistrazione() {
         Utente u= null;
         System.out.println("\nRegistrazione");
@@ -170,6 +215,15 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Gestisce la pagina dell'utente non registrato.
+     * <p>
+     *     Questo metodo stampa le opzioni disponibili (Login, registrazione, visualizzazione di ristoranti vicini,
+     *     ricerca dei ristoranti, ritorno alla home) e gestisce la navigazione alle schermate relative
+     *     in base all'input dell'utente.
+     * </p>
+     * @param luogo Il luogo inserito dal guest per eseguire la ricerca di ristoranti vicini.
+     */
     public static void paginaGuest(String luogo){
         //stampe per pagina guest
         System.out.println("Benvenuto nell'area Guest!");
@@ -222,6 +276,15 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Gestisce la visualizzazione delle recensioni in forma anonima (da parte del guest)
+     * <p>
+     *     Il metodo richiede se l'utente vuole visualizzare le recensioni del ristorante, in caso positivo
+     *     cerca le recensioni associate al ristorante scelto tramite il metodo <code>visualizzaRecensioni</code> e,
+     *     se trovate, stampa il testo, le stelle e l'eventuale risposta, ma non lo username dell'utente che l'ha scritta.
+     * </p>
+     * @param ristorante Il ristorante di cui si chiede se visualizzare le recensioni.
+     */
     public static void recensioniAnonime(Ristorante ristorante){
         System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "?");
         boolean scelta= siNoInput();
@@ -248,6 +311,16 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Permette di visualizzare uno dei ristoranti della lista passata.
+     * <p>
+     *     Il metodo chiede all'utente se vuole vedere le informazioni di uno dei ristoranti della lista passata,
+     *     in caso positivo vengono stampati tutti i nomi e città dei ristoranti, numerati, l'utente potrà scegliere
+     *     quale visualizzare.
+     * </p>
+     * @param ristoranti I ristoranti disponibili alla visualizzazione.
+     * @return Il ristorante scelto per la visualizzazione.
+     */
     public static Ristorante dettagliRistorante(List<String[]> ristoranti){
         System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti (Digita 1 o 2)?");
         System.out.println("1: Sì \n2: No");
@@ -288,6 +361,18 @@ public class TheKnife {
         }while(true);
     }
 
+    /**
+     * Gestisce la ricerca con filtri dei risoranti
+     * <p>
+     *     Il metodo richiede l'inserimento dei filtri che si vogliono aggiungere alla ricerca (Città, tipologia di
+     *     cucina, prezzo massimo, prezzo minimo, stelle minime, presenza del servizio di delivery e della prenotazione
+     *     online).
+     *     Viene eseguito un controllo sulla tipologia di cucina per vedere se esistono ristoranti con quella tipologia,
+     *     in caso contrario viene richiesto all'utente se vuole usare una nuova tipologia o andare avanti senza.
+     *     Inseriti i filtri vengono cercati i ristoranti tramite il metodo <code>cercaRistoranti</code>.
+     * </p>
+     * @return La lista di ristoranti che contiene i ristoranti filtrati.
+     */
     public static List<Ristorante> ricercaConFiltri(){
         System.out.println("Inserisci i filtri che vuoi aggiungere, se non vuoi aggiungerli premi invio");
         System.out.println("Filtro citta (obbligatorio, non puoi lasciarlo vuoto):");
@@ -342,6 +427,15 @@ public class TheKnife {
         return null;
     }
 
+    /**
+     * Metodo di stampa del nome e della città dei ristoranti appartenenti alla lista passata
+     * <p>
+     *     Il metodo permette di stampare solo i nomi e le città dei ristoranti passati per permettere
+     *     una visualizzazione più efficace della lista.
+     * </p>
+     * @param ristoranti La lista di ristoranti passati.
+     * @return La lista che contiene i nomi e le città dei ristoranti stampati.
+     */
     public static List<String[]> stampaRistoranti(List<Ristorante> ristoranti){
         int numero= 1;
         List<String[]> matriceRistoranti= new ArrayList<>();
@@ -355,8 +449,15 @@ public class TheKnife {
         }
         return matriceRistoranti;
     }
-    //metodi di controllo dell'input
-    //controllo che sia una stringa
+
+    /**
+     * Gestisce il controllo dell'input.
+     * <p>
+     *     Il metodo gestisce il controllo dell'input, in modo non sia possibile lasciarlo vuoto andando a capo,
+     *     attraverso un ciclio while che controlla se lo scanner è rimasto vuoto.
+     * </p>
+     * @return La <code>String</code> che contiene l'input dell'utente
+     */
     public static String StringInput(){
         String input= scanner.nextLine();
         while (input.isEmpty()) {
@@ -366,6 +467,15 @@ public class TheKnife {
         return input;
     }
     //controllo che sia un intero
+
+    /**
+     * Gestisce il controllo dell'input per interi.
+     * <p>
+     *     Il metodo non permette di scrivere input diversi da interi attraverso un ciclo while che controlla
+     *     se lo scanner ha un intero al suo interno.
+     * </p>
+     * @return L'<code>int</code> contenuto nell'input.
+     */
     public static int IntInput(){
         while(!scanner.hasNextInt()) {
             System.out.println("Input non valido \nInserire un numero senza virgola!");
@@ -376,6 +486,14 @@ public class TheKnife {
         return numero;
     }
 
+    /**
+     * Gestisce il controllo dell'input per i double.
+     * <p>
+     *     Il metodo non permette di scrivere input diversi da double attraverso un ciclo while che controlla se lo
+     *     scanner ha un double al suo interno.
+     * </p>
+     * @return Il <code>double</code> contenuto nell'input.
+     */
     public static double doubleInput(){
         while (!scanner.hasNextDouble()) {
             System.out.println("Input non valido \nInserire un numero!");
@@ -385,7 +503,16 @@ public class TheKnife {
         scanner.nextLine();
         return numero;
     }
-    //metodo che richiede input double ma che può andare a capo=null
+
+    /**
+     * Gestisce il controllo dell'input per double in cui è permesso lasciare l'input vuoto.
+     * <p>
+     *     Il metodo permette di inserire solo double o lasciare vuoto l'input, tramite un ciclo while che controlla
+     *     se è rimasto vuoto l'input o se contiene un double.
+     * </p>
+     * @return Il <code>Double</code> di valore <code>null</code> se l'input è rimasto vuoto,
+     * altrimenti con il valore <code>double</code>.
+     */
     public static Double doubleInputOrNull(){
         while (true){
             String input= scanner.nextLine().trim();
@@ -400,7 +527,15 @@ public class TheKnife {
         }
     }
 
-    //metodo che richiede input int ma che se vai a capo=null
+    /**
+     * Gestisce il controllo dell'input per interi in cui è permesso lasciare l'input vuoto.
+     * <p>
+     *     Il metodo permette di inserire solo interi o lasciare vuoto l'input, tramite un ciclo while che controlla
+     *     se è rimasto vuoto l'input o se contiene un interi.
+     * </p>
+     * @return L'<code>Integer</code> di valore <code>null</code> se l'input è rimasto vuoto,
+     * altrimenti con il valore <code>int</code>.
+     */
     public static Integer intInputOrNull(){
         while (true){
             String input= scanner.nextLine().trim();
@@ -415,6 +550,15 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Gestisce il controllo dell'input per booleani in cui è permesso lasciare l'input vuoto.
+     * <p>
+     *     Il metodo permette di inserire solo <code>String</code> equivalenti a "si" o "no" o lasciare vuoto l'input,
+     *     tramite un ciclo while che controlla se è rimasto vuoto l'input o se contiene la <code>String</code> corretta.
+     * </p>
+     * @return Il <code>Boolean</code> di valore <code>null</code> se l'input è rimasto vuoto,
+     * con valore <code>true</code> se la <code>String</code> valeva "si", <code>false</code> se ha valore "no".
+     */
     public static Boolean booleanInputOrNull(){
         while (true){
             String input= scanner.nextLine().trim();
@@ -431,7 +575,16 @@ public class TheKnife {
 
         }
     }
-    //controllo che sia o si o no e restituisco true se si, false se no
+
+    /**
+     * Gestisce il controllo dell'input per booleani.
+     * <p>
+     *     Il metodo permette di inserire nell'input <code>String</code> con il valore "si" o "no",
+     *     tramite un ciclo while che controlla il valore della <code>String</code>.
+     * </p>
+     * @return <code>true</code> se l'input contiene la <code>String</code> con valore si,
+     * <code>false</code> se contiene no.
+     */
     public static boolean siNoInput(){
         do{
             String scelta= scanner.nextLine();
@@ -513,7 +666,6 @@ public class TheKnife {
                                 (null, u.getCitta(), null, null, false, false, null);
                         if (!ristorantiVicini.isEmpty()) {
                             System.out.println("Ecco i ristoranti che si trovano vicino a te:");
-                            int numero = 1;
 
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiVicini);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
@@ -571,9 +723,11 @@ public class TheKnife {
                                 int stelleModificate = stelleInput.isEmpty() ? recensioneSelezionata.getStelle() : Integer.parseInt(stelleInput);
 
                                 gestoreRecensione.modificaRecensione(recensioneSelezionata, testoModificato, stelleModificate, u);
+                                modificaStelleRistorante(recensioneSelezionata.getNomeRistorante());
                                 System.out.println("Modificata!");
                             } else if (sceltaOperazione == 2) {
                                 gestoreRecensione.eliminaRecensione(recensioneSelezionata);
+                                modificaStelleRistorante(recensioneSelezionata.getNomeRistorante());
                                 System.out.println("Eliminata!");
                             }
                         } else {
@@ -604,12 +758,54 @@ public class TheKnife {
         }
     }
 
+    /**
+     * Gestisce il cambio della media delle stelle del ristorante passato.
+     * <p>
+     *     Il metodo cambia la media delle stelle del ristorante passato, attraverso il metodo
+     *     <code>visualizzaRecensioni</code> vengono prese le recensioni associate al ristorante.
+     *     Viene eseguito il calcolo della media nuova da inserire tramite un ciclo for che scorre tutte le recensioni.
+     *     Per apportare le modifiche anche al file JSON viene chiamato il metodo <code>modificaFileJsonRistoranti</code>.
+     * </p>
+     * @param nomeRistorante Il nome del ristorante a cui cambiare la media di stelle.
+     */
+    public static void modificaStelleRistorante(String nomeRistorante){
+        List<Ristorante> ristoranti = gestoreRistorante.getElencoRistoranti();
+        Ristorante risto= null;
+        for (Ristorante r : ristoranti) {
+            if (r.getNome().equalsIgnoreCase(nomeRistorante)) {
+                risto= r;
+            }
+        }
+        double nuovaMedia=0.0;
+        if(risto!=null) {
+            try {
+                List<Recensione> recensioniRistorante = gestoreRecensione.visualizzaRecensioni(risto);
+                if (recensioniRistorante != null && !recensioniRistorante.isEmpty()) {
+                    System.out.println(recensioniRistorante.size());
+                    double somma = 0;
+                    double cont = 0;
+                    for (Recensione rec : recensioniRistorante) {
+                        somma += rec.getStelle();
+                        cont++;
+                    }
+                    nuovaMedia=somma/cont;
+                }
+                risto.setStelle(nuovaMedia);
+                gestoreRistorante.modificaFileJsonRistoranti(ristoranti);
+                System.out.println("Le stelle sono state aggiornate a:" + nuovaMedia);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+    }
+
     public static List<Ristorante> PreferitiInRistorante (List<Preferito> ristorantiPreferiti) {
         List<Ristorante> preferitiInRistorante = new ArrayList<>();
         List<Ristorante> tuttiIRistoranti = gestoreRistorante.getElencoRistoranti();
         for (Preferito p : ristorantiPreferiti) {
             for (Ristorante r : tuttiIRistoranti) {
-                if (p.getNomeRist().equals(r.getNome())) {
+                if (p.getNomeRist().equalsIgnoreCase(r.getNome())) {
                     preferitiInRistorante.add(r);
                 }
             }
@@ -643,6 +839,7 @@ public class TheKnife {
                         System.out.println("Inserisci il numero di stelle (1-5):");
                         int stelle = IntInput();
                         gestoreRecensione.inserisciRecensione(visto, testo, stelle, u.getUsername());
+                        modificaStelleRistorante(visto.getNome());
                         System.out.println("Recensione inserita con successo!");
                         break;
 
@@ -892,11 +1089,11 @@ public class TheKnife {
 
     public static Ristorante datiRistorante(Utente ristoratoreLoggato, String nomeControllato) {
         System.out.print("Nazione: ");
-        String nazione = scanner.nextLine();
+        String nazione = StringInput();
         System.out.print("Città: ");
-        String citta = scanner.nextLine();
+        String citta = StringInput();
         System.out.print("Indirizzo: ");
-        String indirizzo = scanner.nextLine();
+        String indirizzo = StringInput();
         System.out.print("Latitudine: ");
         double latitudine = doubleInput();
         System.out.print("Longitudine: ");
@@ -909,7 +1106,7 @@ public class TheKnife {
         boolean prenotazione = siNoInput();
         scanner.nextLine(); // Consumare la nuova linea rimasta
         System.out.print("Tipo di Cucina: ");
-        String tipoCucina = scanner.nextLine();
+        String tipoCucina = StringInput();
         Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
         String nomeProprietario = ristoratoreLoggato.getNome();
         return new Ristorante(nomeControllato, nazione, citta, indirizzo, latitudine, longitudine, prezzoMedio,
