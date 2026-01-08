@@ -803,6 +803,7 @@ public class TheKnife {
                     }
                     nuovaMedia=somma/cont;
                 }
+                nuovaMedia= Math.round(nuovaMedia*10.0)/10.0;
                 risto.setStelle(nuovaMedia);
                 gestoreRistorante.modificaFileJsonRistoranti(ristoranti);
             } catch (IllegalArgumentException e) {

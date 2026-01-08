@@ -164,19 +164,18 @@ public class GestoreRecensione {
      * @throws IllegalArgumentException
      */
     public void visualizzaRiepilogo(Ristorante ris) throws IllegalArgumentException {
-        int sommaStelle = 0;
+
         int cont = 0;
         for (Recensione rec : recensioni) {
             if (rec.getNomeRistorante().equals(ris.getNome())) {
                 cont++;
-                sommaStelle += rec.getStelle();
             }
         }
 
         if (cont == 0) {
             throw new IllegalArgumentException("Nessuna recensione presente per questo ristorante.");
         } else {
-            double media = (double) sommaStelle / cont;
+            double media = ris.getStelle();
             System.out.println("Numero di recensioni: " + cont);
             System.out.println("valutazione media: " + media);
         }
