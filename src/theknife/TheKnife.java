@@ -124,9 +124,12 @@ public class TheKnife {
             successo= false;
         }
         if(successo){
-            System.out.println("Login eseguito con successo! \nBenvenuto:" + utente.getUsername());
+            System.out.println("Login eseguito con successo! ");
+            System.out.println("-------------------------");
+            System.out.println( "\nBenvenuto:" + utente.getUsername());
         }else{
             System.out.println("Il login non è andato a buon fine, siamo spiacenti");
+            System.out.println("-------------------------");
             return;
         }
         //controllo del ruolo per mandarlo alla pagina giusta
@@ -226,10 +229,10 @@ public class TheKnife {
      */
     public static void paginaGuest(String luogo){
         //stampe per pagina guest
-        System.out.println("\nBenvenuto nell'area Guest!");
+        System.out.println("---- Area Guest ----");
         //scelta dell'operazione
         while (true){
-            System.out.println("\n1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
+            System.out.println("1: Login \n2: Registrazione \n3: Visualizza ristoranti vicini \n4: Cerca ristoranti \n0: Torna alla home");
             int op= IntInput();
 
             switch (op){
@@ -244,7 +247,7 @@ public class TheKnife {
                         List<Ristorante> ristorantiVicini =gestoreRistorante.cercaRistoranti
                                 (null, luogo, null, null, false, false, null);
                         if(!ristorantiVicini.isEmpty()){
-                            System.out.println("Ecco i ristoranti che si trovano vicino a te:");
+                            System.out.println("---Ecco i ristoranti che si trovano vicino a te---");
                             //creo matrice che contiene tutti i ristoranti (nome =0, città= 1) che verrà passata al metodo
                             List<String[]> ristorantiTrovati= stampaRistoranti(ristorantiVicini);
                             Ristorante visto=dettagliRistorante(ristorantiTrovati);
@@ -260,6 +263,7 @@ public class TheKnife {
                 case 4:
                         List<Ristorante> ristorantiCercati = ricercaConFiltri();
                         if(ristorantiCercati!=null){
+                            System.out.println("---Ecco i ristoranti trovati---");
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
                             if (visto != null) {
@@ -286,12 +290,13 @@ public class TheKnife {
      * @param ristorante Il ristorante di cui si chiede se visualizzare le recensioni.
      */
     public static void recensioniAnonime(Ristorante ristorante){
+        System.out.println("-------------------------");
         System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "? (si o no)");
         boolean scelta= siNoInput();
         List<Recensione> recensioniRistorante;
         if(scelta){
             try {
-                System.out.println("Recensioni per il ristorante " + ristorante.getNome());
+                System.out.println("---Recensioni per il ristorante " + ristorante.getNome() + "---");
                 recensioniRistorante = gestoreRecensione.visualizzaRecensioniPerRistoratore(ristorante);
                 if(recensioniRistorante.isEmpty()){
                     System.out.println("Non ci sono recensioni per questo ristorante.");
@@ -300,9 +305,9 @@ public class TheKnife {
                 int count = 1;
                 for (Recensione r : recensioniRistorante) {
                     if (r.getRispostaRecensione() != null) {
-                        System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle() + "\nRisposta" + r.getRispostaRecensione());
+                        System.out.println(count++ + " Testo:" + r.getTesto() + "\nStelle:" + r.getStelle() + "\nRisposta" + r.getRispostaRecensione());
                     } else {
-                        System.out.println(count++ + "\nTesto:" + r.getTesto() + "\nStelle:" + r.getStelle());
+                        System.out.println(count++ + " Testo:" + r.getTesto() + "\nStelle:" + r.getStelle());
                     }
                     System.out.println("-------------------------");
                 }
@@ -323,6 +328,7 @@ public class TheKnife {
      * @return Il ristorante scelto per la visualizzazione.
      */
     public static Ristorante dettagliRistorante(List<String[]> ristoranti){
+        System.out.println("-------------------------");
         System.out.println("Vuoi vedere le informazioni di uno di questi ristoranti (Digita 1 o 2)?");
         System.out.println("1: Sì \n2: No");
         do {
@@ -421,8 +427,12 @@ public class TheKnife {
         Double prezzoMassimo= doubleInputOrNull();
         System.out.println("Filtro prezzo minimo (inserisci un numero):");
         Double prezzoMinimo= doubleInputOrNull();
-        System.out.println("Filtro stelle (inserisci il numero minimo di stelle che il ristorante deve avere)");
+        System.out.println("Filtro stelle (inserisci il numero minimo di stelle che il ristorante deve avere (da 1 a 5))");
         Double stelleMinimo= doubleInputOrNull();
+        while(stelleMinimo!= null && (stelleMinimo<1 || stelleMinimo>5)){
+            System.out.println("Il valore inserito non è valido \nInserire un valore compreso tra 1 e 5, altrimenti premere invio per non inserire le stelle:");
+            stelleMinimo= doubleInputOrNull();
+        }
         System.out.println("Filtro delivery (inserisci si o no se vuoi che sia presente o meno il servizio):");
         Boolean delivery= booleanInputOrNull();
         System.out.println("Filtro prenotazione online (inserisci si o no se vuoi che sia presente o meno il servizio)");
@@ -539,29 +549,6 @@ public class TheKnife {
     }
 
     /**
-     * Gestisce il controllo dell'input per interi in cui è permesso lasciare l'input vuoto.
-     * <p>
-     *     Il metodo permette di inserire solo interi o lasciare vuoto l'input, tramite un ciclo while che controlla
-     *     se è rimasto vuoto l'input o se contiene un interi.
-     * </p>
-     * @return L'<code>Integer</code> di valore <code>null</code> se l'input è rimasto vuoto,
-     * altrimenti con il valore <code>int</code>.
-     */
-    public static Integer intInputOrNull(){
-        while (true){
-            String input= scanner.nextLine().trim();
-            if(input.isEmpty()){
-                return null;
-            }
-            try{
-                return Integer.parseInt(input);
-            }catch(NumberFormatException e){
-                System.out.println("Input non valido \nInserire un numero senza virgola oppure premere invio per saltare!");
-            }
-        }
-    }
-
-    /**
      * Gestisce il controllo dell'input per booleani in cui è permesso lasciare l'input vuoto.
      * <p>
      *     Il metodo permette di inserire solo <code>String</code> equivalenti a "si" o "no" o lasciare vuoto l'input,
@@ -609,13 +596,20 @@ public class TheKnife {
         }while(true);
     }
 
-    private static String gestisciInput(String msg, boolean blank) {
-        String input = "";
-        do {
-            System.out.println(msg);
-            input = scanner.nextLine();
-        } while (input.isEmpty() && blank);
-        return input;
+    /**
+     * Il metodo gestisce l'input opzionale dell'utente.
+     * <p>
+     *     Stampa il messaggio passato come parametro e legge l'input dell'utente.
+     *     L'input può essere una stringa vuota se l'utente non desidera modificare il valore.
+     * </p>
+     * @param msg Messaggio da mostrare all'utente.
+     * @param sc Scanner per leggere l'input dell'utente.
+     * @param blank Indica se l'input può essere vuoto.
+     * @return input dell'utente come <code>String</code>.
+     */
+    public static String gestisciInputOpzionale(String msg, Scanner sc, boolean blank) {
+        System.out.println(msg);
+        return sc.nextLine();
     }
 
     //accesso Utente
@@ -638,7 +632,7 @@ public class TheKnife {
             switch (scelta) {
                 //visualizzazione i dati utente
                 case 1:
-                    System.out.println("---Ecco i tuoi dati personali--");
+                    System.out.println("---Ecco i tuoi dati personali---");
                     System.out.println("Nome:" + u.getNome() + "\nCognome:" + u.getCognome() + "\nUsername:"
                             + u.getUsername() + "\nVia:" + u.getVia() + "\nCitta:" + u.getCitta());
                     System.out.println("-------------------------");
@@ -646,10 +640,10 @@ public class TheKnife {
 
                 //modifica dati utente
                 case 2:
-                    String nuovoNome = gestoreRecensione.gestisciInputOpzionale("Inserisci il nuovo nome (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
-                    String nuovoCognome = gestoreRecensione.gestisciInputOpzionale("Inserisci il nuovo cognome (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
-                    String nuovaVia = gestoreRecensione.gestisciInputOpzionale("Inserisci la nuova via (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
-                    String nuovaCitta = gestoreRecensione.gestisciInputOpzionale("Inserisci la nuova citta (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
+                    String nuovoNome = gestisciInputOpzionale("Inserisci il nuovo nome (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
+                    String nuovoCognome = gestisciInputOpzionale("Inserisci il nuovo cognome (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
+                    String nuovaVia = gestisciInputOpzionale("Inserisci la nuova via (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
+                    String nuovaCitta = gestisciInputOpzionale("Inserisci la nuova citta (PREMERE INVIO PER NON MODIFICARE): ", scanner, true);
 
                     for (Utente utente: gestoreUtenti.getListaUtenti()) {
                         if (u.equals(utente)) {
@@ -679,7 +673,7 @@ public class TheKnife {
                         ArrayList<Ristorante> ristorantiVicini = (ArrayList<Ristorante>) gestoreRistorante.cercaRistoranti
                                 (null, u.getCitta(), null, null, false, false, null);
                         if (!ristorantiVicini.isEmpty()) {
-                            System.out.println("Ecco i ristoranti che si trovano vicino a te:");
+                            System.out.println("---Ecco i ristoranti che si trovano vicino a te---");
 
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiVicini);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
@@ -698,6 +692,7 @@ public class TheKnife {
                 case 4:
                     ArrayList<Ristorante> ristorantiCercati = (ArrayList<Ristorante>) ricercaConFiltri();
                     if(ristorantiCercati!=null){
+                        System.out.println("---Ecco i ristoranti trovati---");
                         List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
                         Ristorante visto = dettagliRistorante(ristorantiTrovati);
                         if (visto != null) {
@@ -830,7 +825,7 @@ public class TheKnife {
     public static void ulterioriInformazioni (Utente u, Ristorante visto){
 
             int sceltaInterna;
-
+            System.out.println("-------------------------");
             while (true) {
                 System.out.println("Scegli un'opzione: \n1. Lascia una recensione \n2. Inserisci il ristorante tra i preferiti" +
                         " \n3. Rimuovi il ristorante dai preferiti" +

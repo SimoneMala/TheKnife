@@ -126,11 +126,16 @@ public class GestorePreferiti {
             throw new ListaVuotaException("La lista preferiti è già vuota");
         }
         Preferito p= new Preferito(utente.getUsername(), ristorante.getNome());
+        boolean eliminato= false;
         for(Preferito p1: ristorantiPreferiti){
             if(p1.equals(p)){
                 ristorantiPreferiti.remove(p);
+                eliminato= true;
                 break;
             }
+        }
+        if(!eliminato){
+            throw new ListaVuotaException("Il ristorante non fa parte dei tuoi preferiti");
         }
         ModificaFileJsonPreferiti(ristorantiPreferiti);
     }
