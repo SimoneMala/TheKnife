@@ -10,10 +10,11 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Classe con metodi per gestire le recensioni dei ristoranti
+ * Classe con metodi per gestire l'oggetto <code>Recensione</code> dei ristoranti.
  * <p>
- * Contiene metodi per visualizzare, inserire, modificare, eliminare recensioni e rispondere alle recensioni
- * dei ristoranti.
+ *      Contiene metodi per visualizzare, inserire, modificare, eliminare recensioni e
+ *      rispondere alle recensioni dei ristoranti.
+ * </p>
  * @author Greta Giorgetti
  * @version 1.0
  */
@@ -21,23 +22,31 @@ public class GestoreRecensione {
 
     //CAMPI
     /**
-     * Lista delle recensioni
+     * Lista delle recensioni.
      */
     private List<Recensione> recensioni;
+
     /**
-     * Percorso del file JSON in cui sono memorizzate le recensioni
+     * Percorso del file <code>JSON</code> in cui sono memorizzate le recensioni.
      */
     private final String percorsoFileMemorizzato;
+
     /**
-     * Oggetto Gson per la serializzazione e deserializzazione JSON
+     * Oggetto <code>GSON</code> per la serializzazione e deserializzazione JSON.
+     * <p>
+     *     Viene inizializzato nel costruttore con l'opzione "Pretty Printing"
+     *     per garantire che i file vengano salvati con una formattazione leggibile.
+     * </p>
      */
     private final Gson gson;
 
     /**
-     * Costruttore della classe GestoreRecensione
+     * Costruttore della classe <code>GestoreRecensione</code>.
      * <p>
-     * Inizializza la lista delle recensioni leggendo dal file JSON specificato
-     * @param nomeFileJson
+     *      Inizializza la lista delle recensioni leggendo dal file <code>JSON</code> specificato.
+     *      In caso il file non esista o sia vuoto, viene creata una lista vuota.
+     * </p>
+     * @param nomeFileJson Il nome del file <code>JSON</code> da cui caricare le recensioni.
      */
     public GestoreRecensione(String nomeFileJson) {
         this.percorsoFileMemorizzato=nomeFileJson;
@@ -63,16 +72,16 @@ public class GestoreRecensione {
 
     //METODO GETTER
     /**
-     * Restituisce la lista delle recensioni
-     * @return lista delle recensioni
+     * Restituisce la lista delle recensioni.
+     * @return la lista (<code>ArrayList</code>) delle recensioni.
      */
     public List<Recensione> getRecensioni() {
         return recensioni;
     }
 
     /**
-     * Salva la lista delle recensioni sul file JSON
-     * @param modifica
+     * Il metodo salva la lista delle recensioni sul file <code>JSON</code>.
+     * @param modifica La lista delle recensioni da salvare.
      */
     private void salvaSuFile(List<Recensione> modifica) {
         this.recensioni = modifica;
@@ -85,10 +94,15 @@ public class GestoreRecensione {
     }
 
     /**
-     * Risponde a una recensione specifica
+     * Il metodo permette al ristoratore di rispondere a una recensione specifica.
      * <p>
-     * @param rec
-     * @param risposta
+     *     Viene prima crecata la recensione nella lista delle recensioni,
+     *     poi viene controllato se la recensione ha già una risposta.
+     *     Se non ha una risposta, viene salvata la risposta.
+     * </p>
+     * @param rec Recensione a cui rispondere.
+     * @param risposta Risposta del ristoratore alla recensione.
+     * @throws IllegalArgumentException Se la recensione ha già una risposta.
      */
     public void rispondiRecensione(Recensione rec, String risposta){
         for (Recensione tmp : recensioni) {
@@ -104,12 +118,15 @@ public class GestoreRecensione {
     }
 
     /**
-     * Inserisce una nuova recensione
+     * Il metodo inserisce una nuova recensione.
      * <p>
-     * @param ris
-     * @param testo
-     * @param stelle
-     * @param username
+     *     Viene creato un nuovo oggetto <code>Recensione</code> con i dati passati come parametri
+     *     e viene aggiunto alla lista delle recensioni, salvandolo poi sul file <code>JSON</code>..
+     * </p>
+     * @param ris Ristorante a cui è associata la recensione.
+     * @param testo Testo della recensione.
+     * @param stelle Valutazione in stelle della recensione.
+     * @param username Username dell'utente che ha scritto la recensione.
      */
     public void inserisciRecensione(Ristorante ris, String testo, int stelle, String username) {
         Recensione nuova = new Recensione(ris.getNome(), testo, stelle, null, username);
@@ -118,13 +135,19 @@ public class GestoreRecensione {
     }
 
     /**
-     * Modifica una recensione esistente
+     * Il metodo modifica una recensione esistente.
      * <p>
-     * @param rec
-     * @param testoMod
-     * @param stelleMod
-     * @param utente
-     * @throws IllegalArgumentException
+     *     Viene cercata la recensione nella lista delle recensioni,
+     *     se trovata e l'utente corrisponde a quello che ha scritto la recensione,
+     *     viene modificato il testo e/o le stelle della recensione
+     *     (se i nuovi valori sono validi) e viene salvata la lista sul file <code>JSON</code>.
+     *     I valori possono anche essere lasciati invariati.
+     * </p>
+     * @param rec Recensione da modificare.
+     * @param testoMod Il testo modificato dall'utente (opzionale).
+     * @param stelleMod Le stelle modificate dall'utente (opzionale).
+     * @param utente Utente che sta effettuando la modifica.
+     * @throws IllegalArgumentException Se la recensione non viene trovata o l'utente non è autorizzato a modificarla.
      */
     public void modificaRecensione(Recensione rec, String testoMod, int stelleMod, Utente utente) throws IllegalArgumentException {
         for (Recensione tmp : recensioni) {
@@ -145,10 +168,13 @@ public class GestoreRecensione {
     }
 
     /**
-     * Elimina una recensione specifica
+     * Il metodo elimina una recensione specifica.
      * <p>
-     * @param rec
-     * @throws IllegalArgumentException
+     *     Viene rimossa la recensione dalla lista delle recensioni
+     *     e viene salvata la lista aggiornata sul file <code>JSON</code>.
+     * </p>
+     * @param rec Recensione da eliminare.
+     * @throws IllegalArgumentException Se la recensione non viene trovata.
      */
     public void eliminaRecensione(Recensione rec) throws IllegalArgumentException {
         if (!recensioni.remove(rec)) {
@@ -158,10 +184,13 @@ public class GestoreRecensione {
     }
 
     /**
-     * Visualizza il riepilogo delle recensioni di un ristorante specifico
+     * Il metodo mostra il riepilogo delle recensioni di un ristorante specifico.
      * <p>
-     * @param ris
-     * @throws IllegalArgumentException
+     *     Calcola e visualizza il numero totale di recensioni e la valutazione media in stelle
+     *     per il ristorante passato come parametro.
+     * </p>
+     * @param ris Ristorante di cui visualizzare il riepilogo delle recensioni.
+     * @throws IllegalArgumentException Se non sono presenti recensioni per il ristorante.
      */
     public void visualizzaRiepilogo(Ristorante ris) throws IllegalArgumentException {
 
@@ -182,11 +211,15 @@ public class GestoreRecensione {
     }
 
     /**
-     * Visualizza le recensioni lasciate da un utente specifico
+     * Il metodo visualizza le recensioni lasciate da un utente specifico.
      * <p>
-     * @param u
-     * @return lista delle recensioni dell'utente
-     * @throws IllegalArgumentException
+     *     Controlla se la lista delle recensioni è vuota, poi crea una lista temporanea
+     *     per memorizzare le recensioni dell'utente passato come parametro.
+     *     Se non sono presenti recensioni per l'utente, viene lanciata un'eccezione.
+     * </p>
+     * @param u Utente di cui visualizzare le recensioni.
+     * @return lista delle recensioni dell'utente.
+     * @throws IllegalArgumentException Se la lista delle recensioni è vuota o se non sono presenti recensioni per l'utente.
      */
     public List<Recensione> visualizzaRecensioniperUtente (Utente u) throws IllegalArgumentException {
         if (recensioni.isEmpty()) {
@@ -205,11 +238,14 @@ public class GestoreRecensione {
     }
 
     /**
-     * Visualizza le recensioni ricevute da un ristoratore specifico
+     * Il metodo visualizza le recensioni ricevute da un ristoratore specifico.
      * <p>
-     * @param ris
-     * @return
-     * @throws IllegalArgumentException
+     *     Controlla se la lista delle recensioni è vuota, poi crea una lista temporanea
+     *     per memorizzare le recensioni del ristorante passato come parametro.
+     * </p>
+     * @param ris Ristorante di cui visualizzare le recensioni.
+     * @return lista delle recensioni del ristorante.
+     * @throws IllegalArgumentException Se la lista delle recensioni è vuota.
      */
     public List<Recensione> visualizzaRecensioniPerRistoratore(Ristorante ris) throws IllegalArgumentException {
         if (recensioni.isEmpty()) {
@@ -225,11 +261,14 @@ public class GestoreRecensione {
     }
 
     /**
-     * Controlla se un utente ha già lasciato una recensione per un ristorante specifico
+     * Il metodo controlla se un utente ha già lasciato una recensione per un ristorante specifico.
      * <p>
-     * @param u
-     * @param ris
-     * @return true se l'utente ha già lasciato una recensione, false altrimenti
+     *     Scorre la lista delle recensioni e verifica se esiste una recensione
+     *     associata all'utente e al ristorante passati come parametri.
+     * </p>
+     * @param u Utente che può aver lasciato una recensione.
+     * @param ris Ristorante per cui verificare la recensione.
+     * @return <code>true</code> se l'utente ha già lasciato una recensione, <code>false</code> altrimenti.
      */
     public boolean haLasciatoRecensione(Utente u, Ristorante ris) {
         for (Recensione rec : recensioni) {
@@ -241,12 +280,15 @@ public class GestoreRecensione {
     }
 
     /**
-     * Gestisce l'input opzionale dell'utente
+     * Il metodo gestisce l'input opzionale dell'utente.
      * <p>
-     * @param msg
-     * @param sc
-     * @param blank
-     * @return input dell'utente
+     *     Stampa il messaggio passato come parametro e legge l'input dell'utente.
+     *     L'input può essere una stringa vuota se l'utente non desidera modificare il valore.
+     * </p>
+     * @param msg Messaggio da mostrare all'utente.
+     * @param sc Scanner per leggere l'input dell'utente.
+     * @param blank Indica se l'input può essere vuoto.
+     * @return input dell'utente come <code>String</code>.
      */
     public static String gestisciInputOpzionale(String msg, Scanner sc, boolean blank) {
         System.out.println(msg);
