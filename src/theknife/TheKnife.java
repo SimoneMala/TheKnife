@@ -390,12 +390,19 @@ public class TheKnife {
         System.out.println("Filtro tipo cucina (inserisci il nome del tipo cucina che vuoi):");
         String tipologiaCucina= scanner.nextLine();
         boolean continua=true;
+        List<String> tipiCucina = gestoreRistorante.getTipiCucinaLista();
         while(continua) {
             if (tipologiaCucina.isEmpty()){
                 continua=false;
             }else {
-                ArrayList<String> tipiCucina = (ArrayList<String>) gestoreRistorante.getTipiCucinaLista();
-                if (!tipiCucina.contains(tipologiaCucina)) {
+                boolean contiene= false;
+                for(String cucina: tipiCucina){
+                    if(cucina.equalsIgnoreCase(tipologiaCucina)){
+                        contiene=true;
+                        break;
+                    }
+                }
+                if (!contiene) {
                     System.out.println("La tipologia scritta non è presente tra i ristoranti, vuoi provare a inserirne un altra?(si o no)");
                     boolean scelta = siNoInput();
                     if (scelta) {
