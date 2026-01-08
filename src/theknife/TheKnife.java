@@ -405,7 +405,8 @@ public class TheKnife {
                         tipologiaCucina="";
                         continua = false;
                     }
-                }
+                } else
+                    continua = false;
             }
         }
         System.out.println("I prezzi dei ristoranti sono prezzi medi, in cui un numero identifica quanto spenderai");
@@ -1124,7 +1125,6 @@ public class TheKnife {
         boolean delivery = siNoInput();
         System.out.print("Prenotazione (Si/No): ");
         boolean prenotazione = siNoInput();
-        scanner.nextLine(); // Consumare la nuova linea rimasta
         System.out.print("Tipo di Cucina: ");
         String tipoCucina = StringInput();
         Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
