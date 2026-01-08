@@ -160,7 +160,7 @@ public class TheKnife {
         System.out.println("Username:");
         //controllo che non esistano altri username uguali
         boolean corretto= true;
-        ArrayList<Utente> utenti = (ArrayList<Utente>) gestoreUtenti.getListaUtenti();
+        List<Utente> utenti = gestoreUtenti.getListaUtenti();
         String username= "";
         do {
             username = StringInput();
@@ -241,7 +241,7 @@ public class TheKnife {
                     break;
                 case 3:
                     try {
-                        ArrayList<Ristorante> ristorantiVicini = (ArrayList<Ristorante>) gestoreRistorante.cercaRistoranti
+                        List<Ristorante> ristorantiVicini =gestoreRistorante.cercaRistoranti
                                 (null, luogo, null, null, false, false, null);
                         if(!ristorantiVicini.isEmpty()){
                             System.out.println("Ecco i ristoranti che si trovano vicino a te:");
@@ -258,7 +258,7 @@ public class TheKnife {
                     break;
                 //cerca ristoranti
                 case 4:
-                        ArrayList<Ristorante> ristorantiCercati = (ArrayList<Ristorante>) ricercaConFiltri();
+                        List<Ristorante> ristorantiCercati = ricercaConFiltri();
                         if(ristorantiCercati!=null){
                             List<String[]> ristorantiTrovati = stampaRistoranti(ristorantiCercati);
                             Ristorante visto = dettagliRistorante(ristorantiTrovati);
@@ -288,11 +288,11 @@ public class TheKnife {
     public static void recensioniAnonime(Ristorante ristorante){
         System.out.println("Vuoi visualizzare le recensioni del ristorante " + ristorante.getNome() + "? (si o no)");
         boolean scelta= siNoInput();
-        ArrayList<Recensione> recensioniRistorante;
+        List<Recensione> recensioniRistorante;
         if(scelta){
             try {
                 System.out.println("Recensioni per il ristorante " + ristorante.getNome());
-                recensioniRistorante = (ArrayList<Recensione>) gestoreRecensione.visualizzaRecensioniPerRistoratore(ristorante);
+                recensioniRistorante = gestoreRecensione.visualizzaRecensioniPerRistoratore(ristorante);
                 if(recensioniRistorante.isEmpty()){
                     System.out.println("Non ci sono recensioni per questo ristorante.");
                     return;

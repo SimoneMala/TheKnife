@@ -89,21 +89,18 @@ public class GestoreRecensione {
      * <p>
      * @param rec
      * @param risposta
-     * @throws IllegalArgumentException
      */
-    public void rispondiRecensione(Recensione rec, String risposta) throws IllegalArgumentException {
+    public void rispondiRecensione(Recensione rec, String risposta){
         for (Recensione tmp : recensioni) {
             if (tmp.equals(rec)) {
                 rec = tmp;
                 break;
             }
         }
-        if (rec.getRispostaRecensione() != null) {
-            throw new IllegalArgumentException("Risposta già inserita.");
-        } else {
-            rec.setRispostaRecensione(risposta);
-            salvaSuFile(recensioni);
-        }
+
+        rec.setRispostaRecensione(risposta);
+        salvaSuFile(recensioni);
+
     }
 
     /**
