@@ -917,15 +917,14 @@ public class TheKnife {
      */
     public static void paginaRistoratore(Utente ristoratoreLoggato){
         int scelta;
-        System.out.println("Benvenuto " + ristoratoreLoggato.getNome() + " nell'area Ristoratore!");
+        System.out.println("---- Area Ristoratore ----");
         do {
             //stampe per pagina ristoratore
             System.out.println("Scegli l'operazione da effettuare:");
             System.out.println("1. Aggiungi Ristorante");
             System.out.println("2. Visualizza Ristoranti e modificali");
             System.out.println("3. Visualizza Riepilogo Recensioni Ristorante");
-            System.out.println("4. Visualizza Recensioni Ristorante");
-            System.out.println("5. Rispondi a una Recensione");
+            System.out.println("4. Visualizza Recensioni del Ristorante e Rispondi");
             System.out.println("0. Logout/ Torna indietro");
             System.out.println("Operazione Scelta:");
 
@@ -965,9 +964,9 @@ public class TheKnife {
                     for(Ristorante ristorantiDelRistoratore : rist) {
                         System.out.println(count++ + ": " + ristorantiDelRistoratore.getNome());
                     }
-                    System.out.println("Vuoi modificare i dati di uno di questi ristoranti?(1: Sì, 2: No)");
-                    int risposta= IntInput();
-                    if(risposta!=1) {
+                    System.out.println("Vuoi modificare i dati di uno di questi ristoranti?(Si o No)");
+                    boolean risposta= siNoInput();
+                    if(!risposta) {
                         break;
                     }
                     System.out.println("Inserisci il numero del ristorante che vuoi modificare:");
@@ -1014,40 +1013,10 @@ public class TheKnife {
                         } catch (IllegalArgumentException e) {
                             System.out.println(e.getMessage());
                         }
+                        System.out.println("-------------------------");
                     }
                     break;
                 case 4:
-                    List<Ristorante> ristorantiDelRistoratore = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
-                    if(ristorantiDelRistoratore.isEmpty()){
-                        System.out.println("Non hai ristoranti registrati.");
-                        break;
-                    }
-                    int cont=1;
-                    System.out.println("---- I tuoi ristoranti sono ----");
-                    for(Ristorante ristoranti : ristorantiDelRistoratore) {
-                        System.out.println(cont++ + ": " + ristoranti.getNome());
-                    }
-                    System.out.println("Inserisci il numero del ristorante di cui vuoi visulizzare le recensioni: ");
-                    int sceltaRistorante = IntInput();
-                    if(sceltaRistorante<0 || sceltaRistorante>ristorantiDelRistoratore.size()) {
-                        System.out.println("Scelta non valida.");
-                        break;
-                    }
-                    Ristorante ristoScelto = ristorantiDelRistoratore.get(sceltaRistorante - 1);
-                            try {
-                                List<Recensione> recensioni = gestoreRecensione.visualizzaRecensioniPerRistoratore(ristoScelto);
-                                if(recensioni.isEmpty()){
-                                    System.out.println("Non ci sono recensioni per questo ristorante.");
-                                    break;
-                                }
-                                for (Recensione rec : recensioni) {
-                                    System.out.println(rec.toString());
-                                }
-                            } catch (IllegalArgumentException e) {
-                                System.out.println(e.getMessage());
-                            }
-                    break;
-                case 5:
                     List<Ristorante> ristoDelRistoratore = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
                     if(ristoDelRistoratore.isEmpty()){
                         System.out.println("Non hai ristoranti registrati.");
@@ -1080,6 +1049,12 @@ public class TheKnife {
                                 int contaRecensioni = 1;
                                 for (Recensione rec : recensioni) {
                                     System.out.println(contaRecensioni++ + ": " + rec.toString());
+                                    System.out.println("-------------------------");
+                                }
+                                System.out.println("Vuoi Rispondere a una di queste recensioni?(Si o No)");
+                                boolean risp = siNoInput();
+                                if(!risp) {
+                                    break;
                                 }
                                 System.out.println("Inserisci numero recensione a cui vuoi rispondere: ");
                                 int sceltaRecensione = IntInput();
@@ -1088,6 +1063,10 @@ public class TheKnife {
                                     break;
                                 }
                                 Recensione recensioneTarget = recensioni.get(sceltaRecensione - 1);
+                                if(recensioneTarget.getRispostaRecensione() != null){
+                                    System.out.println("Risposta già presente");
+                                    break;
+                                }
                                 System.out.println("Inserisci la tua risposta:");
                                 String rispostaRecensione = scanner.nextLine();
                                 gestoreRecensione.rispondiRecensione(recensioneTarget, rispostaRecensione);

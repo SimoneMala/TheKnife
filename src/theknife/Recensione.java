@@ -162,12 +162,12 @@ public class Recensione {
      */
     @Override
     public String toString(){
-        String recensione= "Ristorante:" + nomeRistorante +
-                "\nUsername:" + username +
-                "\nTesto recensione:" + testo +
-                "\nValutazione in stelle:" + stelle;
+        String recensione= "Ristorante: " + nomeRistorante +
+                "\nUsername: " + username +
+                "\nTesto recensione: " + testo +
+                "\nValutazione in stelle: " + stelle;
         if(this.rispostaRecensione!=null) {
-            return recensione + "\nRisposta alla recensione:" + rispostaRecensione;
+            return recensione + "\nRisposta alla recensione: " + rispostaRecensione;
         }
         return recensione;
     }
