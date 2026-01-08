@@ -613,6 +613,16 @@ public class TheKnife {
     }
 
     //accesso Utente
+    /**
+     * Gestisce la pagina dell'utente registrato.
+     * <p>
+     *     Questo metodo stampa le opzioni disponibili (visualizzazione e modifica dei dati personali,
+     *     visualizzazione dei ristoranti vicini, ricerca dei ristoranti, visualizzazione delle recensioni
+     *     e dei ristoranti preferiti, ritorno alla home) e gestisce la navigazione alle schermate relative
+     *     in base all'input dell'utente.
+     * </p>
+     * @param u L'utente registrato che ha effettuato l'accesso.
+     */
     public static void paginaUtente(Utente u) {
         int scelta;
 
@@ -747,6 +757,7 @@ public class TheKnife {
                     }
                     break;
 
+                //visualizza preferiti
                 case 6:
                     try {
                         List<String[]> ristorantiScelti = stampaRistoranti(PreferitiInRistorante(gestorePreferiti.visualizzaPreferiti(u)));
@@ -758,6 +769,7 @@ public class TheKnife {
                         System.out.println("Non hai ristoranti preferiti.");
                     }
                     break;
+
                 //uscita
                 case 0:
                     System.out.println("Arrivederci!");
@@ -808,6 +820,15 @@ public class TheKnife {
 
     }
 
+    /**
+     * Converte la lista di preferiti in una lista di ristoranti.
+     * <p>
+     *     Il metodo prende la lista di preferiti passata come parametro e la converte in una lista di ristoranti
+     *     confrontando i nomi dei ristoranti preferiti con quelli presenti nella lista di tutti i ristoranti.
+     * </p>
+     * @param ristorantiPreferiti La lista di preferiti da convertire.
+     * @return La lista di ristoranti convertita.
+     */
     public static List<Ristorante> PreferitiInRistorante (List<Preferito> ristorantiPreferiti) {
         List<Ristorante> preferitiInRistorante = new ArrayList<>();
         List<Ristorante> tuttiIRistoranti = gestoreRistorante.getElencoRistoranti();
@@ -821,7 +842,15 @@ public class TheKnife {
             return preferitiInRistorante;
     }
 
-
+    /**
+     * Gestisce le ulteriori informazioni e le operazioni su un ristorante visualizzato dall'utente.
+     * <p>
+     *     Il metodo permette all'utente di lasciare una recensione, aggiungere o rimuovere il ristorante
+     *     dai preferiti, visualizzare tutte le recensioni lasciate al ristorante o uscire dalla visualizzazione.
+     * </p>
+     * @param u L'utente che sta visualizzando il ristorante.
+     * @param visto Il ristorante visualizzato dall'utente.
+     */
     public static void ulterioriInformazioni (Utente u, Ristorante visto){
 
             int sceltaInterna;
