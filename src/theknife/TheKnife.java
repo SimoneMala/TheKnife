@@ -963,12 +963,12 @@ public class TheKnife {
                     boolean trovatoDuplicato;
                     do{
                         System.out.println("Inserisci il nome del Ristorante:");
-                        nomeNuovoRistorante = scanner.nextLine();
+                        nomeNuovoRistorante = StringInput();
                         trovatoDuplicato = false;
 
                         for(Ristorante r : gestoreRistorante.getElencoRistoranti()){
                             if(r.getNome().equalsIgnoreCase(nomeNuovoRistorante)){
-                                System.out.println("Nome" + nomeNuovoRistorante + "già presente, riprova.");
+                                System.out.println("Nome " + nomeNuovoRistorante + " già presente, riprova.");
                                 trovatoDuplicato = true;
                                 break;
                             }
