@@ -14,7 +14,7 @@ public class Utente {
      * <p>
      *     Definisce i diversi livelli di accesso e le funzionalità per utenti (Cliente o Ristoratore).
      * </p>
-     * @author Aurora Sarno.
+     * @author Aurora Sarno 763021 VA
      */
     public enum Ruolo{
         /**
