@@ -135,8 +135,8 @@ public class GestoreRistorante {
         for(Ristorante r: elencoRistoranti){
             boolean vaBene = true;
 
-            if (tipoCucina != null && !r.getTipoCucina().equals(tipoCucina)) {vaBene = false;}
-            if(!r.getCitta().equals(citta)){vaBene = false;}
+            if (tipoCucina != null && !r.getTipoCucina().equalsIgnoreCase(tipoCucina)) {vaBene = false;}
+            if(!r.getCitta().equalsIgnoreCase(citta)){vaBene = false;}
             if (prezzoMin != null && r.getPrezzoMedio() < prezzoMin){vaBene = false;}
             if(prezzoMax != null && r.getPrezzoMedio() > prezzoMax){vaBene = false;}
             if(delivery != null){
