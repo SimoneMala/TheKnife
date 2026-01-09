@@ -67,7 +67,7 @@ public class GestoreRistorante {
             }
         }else{
             this.elencoRistoranti = new ArrayList<>();
-            String csvFile = "Dati" + File.separator + "RistorantiTheKnife.csv";
+            String csvFile = "data" + File.separator + "RistorantiTheKnife.csv";
 
             try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
                 String riga;

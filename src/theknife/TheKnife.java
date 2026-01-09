@@ -39,11 +39,11 @@ public class TheKnife {
 
         //creo i gestori, che mi serviranno per gestire tutti i dati
         scanner = new Scanner(System.in);
-        gestoreUtenti= new GestoreUtenti("Dati"+ File.separator + "Utenti.json");
-        gestorePreferiti= new GestorePreferiti("Dati"+ File.separator + "Preferiti.json");
+        gestoreUtenti= new GestoreUtenti("data"+ File.separator + "Utenti.json");
+        gestorePreferiti= new GestorePreferiti("data"+ File.separator + "Preferiti.json");
         //se è il primo accesso il gestore ristorante metterà il contenuto del csv all'interno del file json
-        gestoreRistorante= new GestoreRistorante("Dati"+ File.separator + "Ristoranti.json");
-        gestoreRecensione= new GestoreRecensione("Dati"+ File.separator + "Recensioni.json");
+        gestoreRistorante= new GestoreRistorante("data"+ File.separator + "Ristoranti.json");
+        gestoreRecensione= new GestoreRecensione("data"+ File.separator + "Recensioni.json");
 
         //chiamo la pagina home, inizio dell'applicazione
         paginaHome();
