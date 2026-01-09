@@ -979,7 +979,7 @@ public class TheKnife {
                     System.out.println("Ristorante aggiunto con successo.");
                     break;
                 case 2:
-                    List<Ristorante> rist = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
+                    List<Ristorante> rist = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getUsername());
                     if(rist.isEmpty()){
                         System.out.println("Non hai ristoranti registrati.");
                         break;
@@ -1026,7 +1026,7 @@ public class TheKnife {
                     break;
                 case 3:
                     System.out.println("---- Riepilogo Ristoranti ----");
-                    List<Ristorante> ristorantiProprietario = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
+                    List<Ristorante> ristorantiProprietario = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getUsername());
                     if(ristorantiProprietario.isEmpty()){
                         System.out.println("Non hai ristoranti registrati.");
                         break;
@@ -1042,7 +1042,7 @@ public class TheKnife {
                     }
                     break;
                 case 4:
-                    List<Ristorante> ristoDelRistoratore = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getNome());
+                    List<Ristorante> ristoDelRistoratore = gestoreRistorante.getRistoranteDi(ristoratoreLoggato.getUsername());
                     if(ristoDelRistoratore.isEmpty()){
                         System.out.println("Non hai ristoranti registrati.");
                         break;
@@ -1139,7 +1139,7 @@ public class TheKnife {
         System.out.print("Tipo di Cucina: ");
         String tipoCucina = StringInput();
         Double stelle = 0.0; // Nuovo ristorante inizia con 0 stelle
-        String nomeProprietario = ristoratoreLoggato.getNome();
+        String nomeProprietario = ristoratoreLoggato.getUsername();
         return new Ristorante(nomeControllato, nazione, citta, indirizzo, latitudine, longitudine, prezzoMedio,
                 delivery, prenotazione, tipoCucina, stelle, nomeProprietario);
     }

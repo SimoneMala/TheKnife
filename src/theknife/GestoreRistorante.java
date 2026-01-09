@@ -199,13 +199,13 @@ public class GestoreRistorante {
 
     /**
      * Restituisce una lista di ristoranti di proprietà di uno specifico utente.
-     * @param nomeProprietario Il nome del proprietario dei ristoranti da cercare.
+     * @param usernameProprietario Lo username del proprietario dei ristoranti da cercare.
      * @return Una lista di oggetti <code>Ristorante</code> appartenenti al proprietario specificato.
      */
-    public List<Ristorante> getRistoranteDi(String nomeProprietario){
+    public List<Ristorante> getRistoranteDi(String usernameProprietario){
         List<Ristorante> risultati = new ArrayList<>();
         for(Ristorante r: elencoRistoranti){
-            if(r.getNomeProprietario().equals(nomeProprietario)){
+            if(r.getNomeProprietario().equals(usernameProprietario)){
                 risultati.add(r);
             }
         }
