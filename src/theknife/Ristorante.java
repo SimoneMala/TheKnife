@@ -9,7 +9,7 @@ package theknife;
  * e il nome del proprietario.
  * </p>
  *
- * @author Simone Malacrida
+ * @author Simone Malacrida 760997 VA
  */
 public class Ristorante {
     //campi

@@ -9,7 +9,7 @@ import java.util.Objects;
  *      il testo della recensione, la valutazione in stelle, la risposta del ristorante
  *      e l'username dell'utente che ha scritto la recensione.
  * * </p>
- * @author Greta Giorgetti
+ * @author Greta Giorgetti 761628 VA
  * @version 1.0
  */
 public class Recensione {

@@ -15,7 +15,7 @@ import java.util.*;
  *      Contiene metodi per visualizzare, inserire, modificare, eliminare recensioni e
  *      rispondere alle recensioni dei ristoranti.
  * </p>
- * @author Greta Giorgetti
+ * @author Greta Giorgetti 761628 VA
  * @version 1.0
  */
 public class GestoreRecensione {

@@ -5,7 +5,7 @@ package theknife;
  * <p>
  *     Questa classe viene utilizzata per creare gli utenti registrati da salvare.
  * </p>
- * @author Aurora Sarno.
+ * @author Aurora Sarno 763021 VA
  */
 public class Utente {
 

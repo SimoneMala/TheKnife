@@ -5,7 +5,7 @@ package theknife;
  * <p>
  *     Questa classe viene utilizzata per salvare per ogni utente i suoi ristoranti preferiti.
  * </p>
- * @author Aurora Sarno.
+ * @author Aurora Sarno 763021 VA
  */
 public class Preferito {
     /**

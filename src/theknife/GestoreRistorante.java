@@ -21,7 +21,7 @@ import java.nio.file.Path;
  *     Utilizza la librearia Gson per la serializzazione e deserializzazione dei dati in formato JSON.
  * </p>
  *
- * @author Simone Malacrida
+ * @author Simone Malacrida 760997 VA
  */
 public class GestoreRistorante {
     //campi

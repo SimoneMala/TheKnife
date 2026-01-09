@@ -16,7 +16,7 @@ import java.util.List;
  *     Questa classe mantiene la lista dei ristoranti preferiti di ogni utente, si occupa del caricamento e salvataggio
  *     su file JSON dedicato e fornisce metodi di modifica e visualizzazione della lista.
  * </p>
- * @author Aurora Sarno.
+ * @author Aurora Sarno 763021 VA
  */
 public class GestorePreferiti {
 

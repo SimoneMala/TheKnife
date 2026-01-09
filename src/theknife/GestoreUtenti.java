@@ -17,7 +17,7 @@ import java.util.*;
  *     Questa classe mantiene la lista degli utenti registrati, si occupa del caricamento e salvataggio
  *     su file JSON dedicato e fornisce metodo per autenticazione e registrazione all'applicazione.
  * </p>
- * @author Aurora Sarno.
+ * @author Aurora Sarno 763021 VA
  */
 public class GestoreUtenti {
      /**

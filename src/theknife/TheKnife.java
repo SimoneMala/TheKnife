@@ -14,9 +14,9 @@ import java.util.*;
  *     Questa classe contiene il metodo statico <code>main</code> che viene invocato dalla JVM all'avvio.
  *     Si occupa di inizializzare i gestori dei dati e di avviare l'interfaccia per l'interazione con il sistema
  * </p>
- * @author Aurora Sarno
- * @author Simone Malacrida
- * @author Greta Giorgetti
+ * @author Aurora Sarno 763021 VA
+ * @author Simone Malacrida 760997 VA
+ * @author Greta Giorgetti 761628 VA
  */
 public class TheKnife {
 
