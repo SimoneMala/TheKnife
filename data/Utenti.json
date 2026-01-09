@@ -1,0 +1,56 @@
+[
+  {
+    "nome": "Ristoratore",
+    "cognome": "Prova",
+    "username": "ProvaRistoratore1",
+    "password": "$2a$10$NAZ5GGVDo5bjwuVyp05zneL0wYjm4dKdedoNGIbMKh/qKW9S6Zf/S",
+    "via": "Via Milano, 8",
+    "citta": "Varese",
+    "ruolo": "RISTORATORE"
+  },
+  {
+    "nome": "Cliente",
+    "cognome": "Prova",
+    "username": "ProvaCliente1",
+    "password": "$2a$10$EiC4d9pZYEUH2RWWORHqVOYJHp4eeGzmQ6YTuNB1KYbVcEw2CR2yy",
+    "via": "Via Bernardo, 19",
+    "citta": "Busto Arsizio",
+    "ruolo": "CLIENTE"
+  },
+  {
+    "nome": "Sara",
+    "cognome": "Minion",
+    "username": "ProvaCliente2",
+    "password": "$2a$10$ICc6KwPZncxhFWQms7.Sb.cHz1bRFG1rdrWbV4Dif8s6hRYp.gcA.",
+    "via": "Via Luini, 5",
+    "citta": "Luino",
+    "ruolo": "CLIENTE"
+  },
+  {
+    "nome": "Simone",
+    "cognome": "Mala",
+    "username": "simoMala",
+    "password": "$2a$10$u4Pg0LYaa3UGewPHHSZ66Oy3TTbhggu1AgjUkhf4rHhcnx9MKEi1G",
+    "via": "Via Como, 14",
+    "citta": "Como",
+    "ruolo": "RISTORATORE"
+  },
+  {
+    "nome": "Aurora",
+    "cognome": "Minion",
+    "username": "auri5",
+    "password": "$2a$10$FOu8TkBQlx0ZiVlUnIAhY.vTjmdWP.q/XR6bGXfwuHp0FRRvOaMQm",
+    "via": "Via Varese,1",
+    "citta": "Varese",
+    "ruolo": "RISTORATORE"
+  },
+  {
+    "nome": "Greta",
+    "cognome": "Giorgia",
+    "username": "ggiorgetti",
+    "password": "$2a$10$s1vZvX04xE5rq0eH3ZoPw.k1D95YBMFK1iyQ98DtDoP0l6V.GHiGK",
+    "via": "Via Luinesi 41",
+    "citta": "Luino",
+    "ruolo": "RISTORATORE"
+  }
+]

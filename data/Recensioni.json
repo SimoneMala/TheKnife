@@ -1,0 +1,27 @@
+[
+  {
+    "nomeRistorante": "Pao",
+    "testo": "Molto bello",
+    "stelle": 3,
+    "rispostaRecensione": "Grazie mille!",
+    "username": "ProvaCliente1"
+  },
+  {
+    "nomeRistorante": "Prova1",
+    "testo": "Male organizzato, ma cibo molto buono.",
+    "stelle": 3,
+    "username": "ProvaCliente1"
+  },
+  {
+    "nomeRistorante": "See No Evil Pizza",
+    "testo": "Una vera pizza! Come si fanno qui in Italia!",
+    "stelle": 5,
+    "username": "ProvaCliente1"
+  },
+  {
+    "nomeRistorante": "Pao",
+    "testo": "Ambiente molto carino, molto veloci con le ordinazioni",
+    "stelle": 4,
+    "username": "ProvaCliente2"
+  }
+]

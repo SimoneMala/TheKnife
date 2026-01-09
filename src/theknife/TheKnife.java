@@ -625,7 +625,7 @@ public class TheKnife {
      */
     public static void paginaUtente(Utente u) {
         int scelta;
-
+        System.out.println("---- Area Cliente ----");
         while(true) {
 
             System.out.println("1. Visualizza dati personali");
@@ -907,14 +907,15 @@ public class TheKnife {
                     //visualizza riepilogo recensioni ristorante
                     case 4:
                         try {
-                            System.out.println("Ecco le recensioni del ristorante:");
+                            System.out.println("---Ecco le recensioni del ristorante---");
                             List<Recensione> recs = gestoreRecensione.visualizzaRecensioniPerRistoratore(visto);
                             if(recs.isEmpty()){
                                 System.out.println("Non ci sono recensioni per questo ristorante.");
                                 break;
                             }
-                        for (Recensione r : recs) {
-                            System.out.println(r + " ");
+                            for (Recensione r : recs) {
+                                System.out.println(r);
+                                System.out.println("-------------------------");
                             }
                         } catch (IllegalArgumentException e) {
                             System.out.println(e.getMessage());
